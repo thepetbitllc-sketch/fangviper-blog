@@ -1,19 +1,22 @@
 # Generates the search-friendly parts of the public site from index.html + assets/js/data.js:
-#   articles/<slug>.html  one real page per post (full text in the HTML, title, description,
-#                         share-preview tags, BlogPosting structured data)
+#   <slug>/index.html   one real page per post at /<slug>/ (full text in the HTML, SEO title,
+#                       meta description, share-preview tags, BlogPosting + FAQPage data)
 #   sitemap.xml, robots.txt, .nojekyll
 #   and refreshes the home page's own meta tags in index.html.
 # Run after editing posts:   powershell -ExecutionPolicy Bypass -File tools\build-pages.ps1
 # Change the public address: ... -File tools\build-pages.ps1 -SiteUrl https://blog.fangviper.com
+# Keep this file plain ASCII: Windows PowerShell 5.1 misreads UTF-8 text in scripts.
 param([string]$SiteUrl)
 $ErrorActionPreference = "Stop"
 $root = Split-Path $PSScriptRoot -Parent
 $cfg = Join-Path $PSScriptRoot "site-url.txt"
+$manifest = Join-Path $PSScriptRoot "generated.txt"
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 function Read-Text($p) { [IO.File]::ReadAllText($p, [Text.Encoding]::UTF8) }
 function Write-Text($p, $t) { [IO.File]::WriteAllText($p, $t, $utf8) }
 function Esc([string]$s) { $s.Replace('&', '&amp;').Replace('"', '&quot;').Replace('<', '&lt;').Replace('>', '&gt;') }
 function JsonEsc([string]$s) { $s.Replace('\', '\\').Replace('"', '\"') }
+function Field([string]$text, [string]$name) { ([regex]("\b$name" + ':\s*"([^"]*)"')).Match($text).Groups[1].Value }
 function Set-Region([string]$text, [string]$name, [string]$content) {
   $startTag = "<!-- build:$name"
   $endTag = "<!-- /build:$name -->"
@@ -27,19 +30,30 @@ if ($SiteUrl) { Write-Text $cfg $SiteUrl } else { $SiteUrl = (Read-Text $cfg).Tr
 $SiteUrl = $SiteUrl.TrimEnd('/')
 $brand = "Fang Viper Journal"
 $dash = [string][char]0x2014   # em dash, written by code so the script stays plain ASCII
-$homeDesc = "The Fang Viper Journal: no-fluff motivation, training, nutrition and recovery for people who show up when nobody's watching."
+$homeDesc = "The Fang Viper Journal: discipline, mindset, money and training for people who keep going when motivation runs out."
+$reserved = @("assets", "tools", "dist", "articles", "index.html")
 
 # ---- read posts from data.js ------------------------------------------------
+# each post object starts with slug and ends with the body template string
 $data = Read-Text (Join-Path $root "assets\js\data.js")
-$rx = [regex]'(?s)\{\s*slug:\s*"(?<slug>[^"]+)".*?title:\s*"(?<title>[^"]*)".*?category:\s*"(?<cat>[^"]*)".*?date:\s*"(?<date>[^"]*)".*?excerpt:\s*"(?<excerpt>[^"]*)".*?cover:\s*\{(?<cover>[^}]*)\}.*?body:\s*`(?<body>.*?)`\s*\}'
+$rx = [regex]'(?s)\{\s*slug:\s*"(?<slug>[^"]+)"(?<fields>.*?)body:\s*`(?<body>.*?)`\s*\}'
 $posts = @()
 foreach ($m in $rx.Matches($data)) {
-  $src = ([regex]'src:\s*"([^"]+)"').Match($m.Groups['cover'].Value).Groups[1].Value
-  $posts += [pscustomobject]@{
-    slug = $m.Groups['slug'].Value; title = $m.Groups['title'].Value; cat = $m.Groups['cat'].Value
-    date = $m.Groups['date'].Value; excerpt = $m.Groups['excerpt'].Value; body = $m.Groups['body'].Value.Trim()
+  $f = $m.Groups['fields'].Value
+  $cover = ([regex]'(?s)cover:\s*\{([^}]*)\}').Match($f).Groups[1].Value
+  $kw = ([regex]'(?s)keywords:\s*\[([^\]]*)\]').Match($f).Groups[1].Value
+  $src = Field $cover "src"
+  $p = [pscustomobject]@{
+    slug = $m.Groups['slug'].Value
+    title = Field $f "title"; seoTitle = Field $f "seoTitle"; cat = Field $f "category"
+    date = Field $f "date"; excerpt = Field $f "excerpt"; alt = Field $cover "alt"
+    keywords = @(([regex]'"([^"]+)"').Matches($kw) | ForEach-Object { $_.Groups[1].Value })
     image = $(if ($src) { $src } else { "assets/img/hero-lift.jpg" })
+    body = $m.Groups['body'].Value.Trim()
   }
+  if ($reserved -contains $p.slug) { throw "Slug '$($p.slug)' is reserved; pick another" }
+  if (-not $p.title -or -not $p.date) { throw "Post '$($p.slug)' needs a title and a date" }
+  $posts += $p
 }
 if ($posts.Count -eq 0) { throw "No posts found in data.js" }
 
@@ -63,11 +77,19 @@ $homeMeta = @"
 $tpl = Set-Region $tpl "meta" $homeMeta
 Write-Text (Join-Path $root "index.html") $tpl
 
-# ---- article pages ----------------------------------------------------------
-$outDir = Join-Path $root "articles"
-New-Item -ItemType Directory -Force $outDir | Out-Null
-Get-ChildItem $outDir -Filter *.html | Remove-Item
+# ---- remove pages from the previous build (deleted or renamed posts) --------
+$legacy = Join-Path $root "articles"
+if (Test-Path $legacy) { Remove-Item $legacy -Recurse -Force }
+if (Test-Path $manifest) {
+  foreach ($old in (Read-Text $manifest) -split "`n") {
+    $old = $old.Trim()
+    if (-not $old -or $reserved -contains $old) { continue }
+    $page = Join-Path $root "$old\index.html"
+    if ((Test-Path $page) -and ((Read-Text $page).Contains("build:article"))) { Remove-Item (Join-Path $root $old) -Recurse -Force }
+  }
+}
 
+# ---- article pages ----------------------------------------------------------
 # shared page shell: no intro loader, no home sections, links point back to the home page
 $shell = Set-Region $tpl "preloader" ""
 $shell = Set-Region $shell "home" ""
@@ -76,27 +98,48 @@ $shell = $shell.Replace('href="#challenge"', 'href="index.html#challenge"')
 $shell = $shell.Replace('<div class="curtain" aria-hidden="true">', '<div class="curtain curtain--boot" aria-hidden="true">')
 
 foreach ($p in $posts) {
-  $url = "$SiteUrl/articles/$($p.slug).html"
+  $url = "$SiteUrl/$($p.slug)/"
   $img = "$SiteUrl/$($p.image)"
+  $pageTitle = $(if ($p.seoTitle) { $p.seoTitle } else { "$($p.title) $dash $brand" })
+  $shareTitle = $(if ($p.seoTitle) { $p.seoTitle } else { $p.title })
   $dateText = [datetime]::ParseExact($p.date, 'yyyy-MM-dd', [cultureinfo]::InvariantCulture).ToString('MMM d, yyyy', [cultureinfo]'en-US')
+
   $ld = '{"@context":"https://schema.org","@type":"BlogPosting","headline":"' + (JsonEsc $p.title) + '","description":"' + (JsonEsc $p.excerpt) +
         '","datePublished":"' + $p.date + '","dateModified":"' + $p.date + '","image":"' + $img + '","mainEntityOfPage":"' + $url +
+        '","keywords":"' + (JsonEsc ($p.keywords -join ', ')) +
         '","author":{"@type":"Organization","name":"Fang Viper"},"publisher":{"@type":"Organization","name":"Fang Viper","logo":{"@type":"ImageObject","url":"' + $SiteUrl + '/assets/img/logo-black.png"}}}'
+  $ldTags = "<script type=""application/ld+json"">$ld</script>"
+
+  # FAQ answers written as <details><summary>Q</summary><p>A</p></details> in the body
+  $faqs = ([regex]'(?s)<summary>(.*?)</summary>\s*<p>(.*?)</p>').Matches($p.body)
+  if ($faqs.Count -gt 0) {
+    $items = @()
+    foreach ($q in $faqs) {
+      $question = JsonEsc ($q.Groups[1].Value -replace '<[^>]+>', '').Trim()
+      $answer = JsonEsc ($q.Groups[2].Value -replace '<[^>]+>', '').Trim()
+      $items += '{"@type":"Question","name":"' + $question + '","acceptedAnswer":{"@type":"Answer","text":"' + $answer + '"}}'
+    }
+    $ldTags += "`n  <script type=""application/ld+json"">{""@context"":""https://schema.org"",""@type"":""FAQPage"",""mainEntity"":[" + ($items -join ',') + "]}</script>"
+  }
+  $tags = ($p.keywords | ForEach-Object { "  <meta property=""article:tag"" content=""$(Esc $_)"">" }) -join "`n"
+
   $meta = @"
 <!-- build:meta (generated by tools/build-pages.ps1) -->
   <base href="../">
-  <title>$(Esc $p.title) $dash $brand</title>
+  <title>$(Esc $pageTitle)</title>
   <meta name="description" content="$(Esc $p.excerpt)">
   <link rel="canonical" href="$url">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="$brand">
-  <meta property="og:title" content="$(Esc $p.title)">
+  <meta property="og:title" content="$(Esc $shareTitle)">
   <meta property="og:description" content="$(Esc $p.excerpt)">
   <meta property="og:url" content="$url">
   <meta property="og:image" content="$img">
+  <meta property="og:image:alt" content="$(Esc $p.alt)">
   <meta property="article:published_time" content="$($p.date)">
+$tags
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">$ld</script>
+  $ldTags
   <!-- /build:meta -->
 "@
   $article = @"
@@ -107,6 +150,7 @@ foreach ($p in $posts) {
       <div class="a-kicker"><b>$(Esc $p.cat)</b><span>$dateText</span><span>By Fang Viper</span></div>
       <h1 class="a-title">$(Esc $p.title)</h1>
       <p class="a-dek">$(Esc $p.excerpt)</p>
+      <div class="a-cover"><img src="$($p.image)" alt="$(Esc $p.alt)"></div>
     </header>
     <div class="a-layout container">
       <article class="prose" id="article-body">
@@ -119,17 +163,20 @@ foreach ($p in $posts) {
 "@
   $page = Set-Region $shell "meta" $meta
   $page = Set-Region $page "article" $article
-  $page = $page.Replace('<a class="skip" href="#journal">Skip to articles</a>', "<a class=""skip"" href=""articles/$($p.slug).html#article-body"">Skip to article</a>")
-  Write-Text (Join-Path $outDir "$($p.slug).html") $page
+  $page = $page.Replace('<a class="skip" href="#journal">Skip to articles</a>', "<a class=""skip"" href=""$($p.slug)/#article-body"">Skip to article</a>")
+  $dir = Join-Path $root $p.slug
+  New-Item -ItemType Directory -Force $dir | Out-Null
+  Write-Text (Join-Path $dir "index.html") $page
 }
+Write-Text $manifest (($posts | ForEach-Object { $_.slug }) -join "`n")
 
 # ---- sitemap, robots, .nojekyll --------------------------------------------
 $latest = ($posts | Sort-Object date -Descending | Select-Object -First 1).date
 $urls = @("  <url><loc>$SiteUrl/</loc><lastmod>$latest</lastmod></url>")
-foreach ($p in $posts) { $urls += "  <url><loc>$SiteUrl/articles/$($p.slug).html</loc><lastmod>$($p.date)</lastmod></url>" }
+foreach ($p in $posts) { $urls += "  <url><loc>$SiteUrl/$($p.slug)/</loc><lastmod>$($p.date)</lastmod></url>" }
 Write-Text (Join-Path $root "sitemap.xml") ("<?xml version=""1.0"" encoding=""UTF-8""?>`n<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"">`n" + ($urls -join "`n") + "`n</urlset>`n")
 Write-Text (Join-Path $root "robots.txt") "User-agent: *`nAllow: /`nDisallow: /tools/`n`nSitemap: $SiteUrl/sitemap.xml`n"
 Write-Text (Join-Path $root ".nojekyll") ""
 
-Write-Host "Built $($posts.Count) article pages, sitemap.xml and robots.txt for $SiteUrl"
-if ($SiteUrl -match "USERNAME") { Write-Host "Note: site address is still a placeholder. Re-run with -SiteUrl once the GitHub address is known." }
+Write-Host "Built $($posts.Count) article page(s), sitemap.xml and robots.txt for $SiteUrl"
+foreach ($p in $posts) { Write-Host "  $SiteUrl/$($p.slug)/" }

@@ -9,15 +9,15 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const embedded = window.self !== window.top;
-  const POSTS = window.FV_POSTS || [];
+  const POSTS = (window.FV_POSTS || []).slice().sort((a, b) => b.date.localeCompare(a.date)); // newest first
   const bySlug = slug => POSTS.find(p => p.slug === slug);
 
-  // On the public website every article has its own page (articles/<slug>.html)
+  // On the public website every article has its own page (/<slug>/)
   // so search engines can list it. Inside the Claude artifact preview only #hash
   // links survive, so there articles open in place instead.
   const HASH_MODE = embedded;
   const articleMount = document.querySelector("[data-article][data-slug]");
-  const postHref = slug => (HASH_MODE ? `#${slug}` : `articles/${slug}.html`);
+  const postHref = slug => (HASH_MODE ? `#${slug}` : `${slug}/`);
   const homeHref = anchor => (HASH_MODE || !articleMount ? `#${anchor}` : `index.html#${anchor}`);
   const ADS = window.FV_ADS;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -138,7 +138,7 @@
     }
   }
   const coverArt = p => p.cover.type === "photo"
-    ? `<img src="${p.cover.src}" alt="" loading="lazy">`
+    ? `<img src="${p.cover.src}" alt="${p.cover.alt || ""}" loading="lazy">`
     : pattern(p.cover.pattern, p.slug);
 
   function cardHTML(p, i) {
@@ -245,6 +245,11 @@
   function initNav() {
     const top = $("[data-top]");
     $$("[data-store]").forEach(a => { a.href = ADS ? ADS.storeUrl(a.dataset.medium || "blog_link", a.dataset.q) : "https://fangviper.com"; });
+    // category links appear once that category has a post
+    $$("[data-cat-link]").forEach(a => {
+      const c = a.dataset.catLink;
+      if (c !== "All" && !POSTS.some(p => p.category === c)) a.hidden = true;
+    });
     if (!top) return;
     let last = scrollY;
     const onScroll = () => {
@@ -290,7 +295,7 @@
     document.documentElement.addEventListener("mouseleave", () => c.classList.add("is-hidden"));
     document.documentElement.addEventListener("mouseenter", () => c.classList.remove("is-hidden"));
     document.addEventListener("mouseover", e => {
-      const t = e.target.closest("[data-cursor], a, button, label, [role=tab]");
+      const t = e.target.closest("[data-cursor], a, button, label, [role=tab], summary");
       c.classList.remove("is-link", "is-label");
       if (!t || t.matches("label")) return;
       if (t.dataset.cursor) { label.textContent = t.dataset.cursor; c.classList.add("is-label"); }
@@ -517,10 +522,26 @@
     </a>`;
   }
 
+  // Filler cards keep the grid from looking empty while the journal is still small.
+  const SOON_CARDS = [
+    { href: "#join", word: "NEXT", cat: "Coming soon", meta: "New story", title: "The next story is being written.", text: "Mindset, money and training, one post at a time. Join the pack to get it first.", more: "Join the pack", cursor: "Join" },
+    { href: "#challenge", word: "TODAY", cat: "Daily challenge", meta: "Live now", title: "Don't just read about discipline.", text: "Today's challenge is live. Tap through every rep and earn your streak.", more: "Take the challenge", cursor: "Go" }
+  ];
+  const soonHTML = s => `<a class="card card--soon" href="${s.href}" data-reveal data-cursor="${s.cursor}">
+      <div class="card__cover card__cover--soon"><span class="card__word">${s.word}</span><span class="card__glare"></span></div>
+      <div class="card__body">
+        <div class="card__meta"><span class="card__cat">${s.cat}</span><span>${s.meta}</span></div>
+        <h3 class="card__title"><span>${s.title}</span></h3>
+        <p class="card__excerpt">${s.text}</p>
+        <span class="card__more">${s.more} ${ICON.right}</span>
+      </div>
+    </a>`;
+
   function initJournal(list) {
     const grid = $("[data-grid]"), chips = $("[data-chips]"), search = $("[data-search]"), empty = $("[data-empty]");
     if (!grid) return;
-    const CATS = window.FV_CATEGORIES || ["All"];
+    // only offer categories that have at least one post
+    const CATS = (window.FV_CATEGORIES || ["All"]).filter(c => c === "All" || list.some(p => p.category === c));
     let cat = new URLSearchParams(location.search).get("cat");
     if (!CATS.includes(cat)) cat = "All";
     let q = "", timer;
@@ -533,12 +554,16 @@
 
     function render(animate) {
       const items = list.filter(p => (cat === "All" || p.category === cat) &&
-        (!q || (p.title + " " + p.excerpt + " " + p.category).toLowerCase().includes(q)));
+        (!q || (p.title + " " + p.excerpt + " " + p.category + " " + (p.keywords || []).join(" ")).toLowerCase().includes(q)));
       const paint = () => {
         grid.innerHTML = items.map(cardHTML).join("");
-        if (adCard && items.length >= 2) {
+        if (adCard && items.length >= 1) {
           adCard.classList.remove("in");
           grid.insertBefore(adCard, grid.children[Math.min(4, items.length)] || null);
+        }
+        if (!q && items.length) {
+          let k = 0;
+          while (grid.children.length < 3 && k < SOON_CARDS.length) grid.insertAdjacentHTML("beforeend", soonHTML(SOON_CARDS[k++]));
         }
         empty.hidden = items.length > 0;
         grid.classList.remove("switching");
@@ -547,8 +572,8 @@
       if (animate && !reduced) { grid.classList.add("switching"); setTimeout(paint, 280); } else paint();
     }
     const setCat = c => {
-      cat = c;
-      $$(".chip", chips).forEach(b => b.setAttribute("aria-selected", String(b.dataset.chip === c)));
+      cat = CATS.includes(c) ? c : "All";
+      $$(".chip", chips).forEach(b => b.setAttribute("aria-selected", String(b.dataset.chip === cat)));
       render(true);
     };
     chips.addEventListener("click", e => { const b = e.target.closest("[data-chip]"); if (b && b.dataset.chip !== cat) setCat(b.dataset.chip); });
@@ -560,7 +585,7 @@
       e.preventDefault();
       search.value = ""; q = "";
       if (currentView === "article") {
-        cat = a.dataset.catLink;
+        cat = CATS.includes(a.dataset.catLink) ? a.dataset.catLink : "All";
         $$(".chip", chips).forEach(b => b.setAttribute("aria-selected", String(b.dataset.chip === cat)));
         location.hash = "journal";
         return;
@@ -611,10 +636,12 @@
   function initChallenge() {
     const sec = $("#challenge");
     if (!sec) return;
+    // rotates daily: body, business and mind
     const LIST = [
-      { goal: 50, name: "Push-ups" }, { goal: 100, name: "Squats" }, { goal: 30, name: "Burpees" },
-      { goal: 60, name: "Sit-ups" }, { goal: 40, name: "Lunges" }, { goal: 100, name: "Jumping jacks" },
-      { goal: 80, name: "Mountain climbers" }
+      { goal: 50, name: "Push-ups", unit: "rep" }, { goal: 10, name: "Outreach messages", unit: "message" },
+      { goal: 20, name: "Pages read", unit: "page" }, { goal: 100, name: "Squats", unit: "rep" },
+      { goal: 60, name: "Minutes deep work", unit: "minute" }, { goal: 30, name: "Burpees", unit: "rep" },
+      { goal: 10, name: "Ideas written down", unit: "idea" }
     ];
     const now = new Date();
     const key = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
@@ -647,7 +674,7 @@
       MSG.forEach(([th, s]) => { if (p >= th) m = s; });
       if (m !== lastMsg) { msg.textContent = m; restart(msg, "flash"); lastMsg = m; }
       btn.classList.toggle("complete", p >= 1);
-      tap.textContent = p >= 1 ? "Complete" : "Tap per rep";
+      tap.textContent = p >= 1 ? "Complete" : `Tap per ${ch.unit}`;
       reward.hidden = p < 1;
       LS.set("fv_challenge", { date: key, done });
     }
@@ -715,9 +742,11 @@
 
   let journal = null;
   function initHome() {
+    // newest post is featured (or one marked `featured: true`); it also stays in the grid
+    // until there are enough posts to fill the grid without it
     const featured = POSTS.find(p => p.featured) || POSTS[0];
     renderFeatured(featured);
-    journal = initJournal(POSTS.filter(p => p !== featured));
+    journal = initJournal(POSTS.length >= 4 ? POSTS.filter(p => p !== featured) : POSTS);
     initRotator();
     initClock();
     initResume();
@@ -744,7 +773,7 @@
     const more = POSTS.filter(x => x !== p && x !== next)
       .sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 3);
     const myFangs = LS.get("fv_fangs", {})[p.slug] || 0;
-    document.title = `${p.title} — Fang Viper Journal`;
+    document.title = p.seoTitle || `${p.title} — Fang Viper Journal`;
     LS.set("fv_lastpost", p.slug);
 
     main.innerHTML = `
@@ -769,7 +798,7 @@
       <section class="finish" data-finish>
         <div class="container">
           <div class="finish__stamp">Set<br>complete</div>
-          <p class="finish__sub">You read every word. That's the same discipline that builds the body.</p>
+          <p class="finish__sub">You read every word. That's the same discipline that builds everything else.</p>
           <div class="finish__badge" data-badge></div>
           <div class="finish__actions">
             <button class="btn btn--ghost" data-fang>${ICON.fang} Fang it</button>
@@ -792,6 +821,11 @@
       h.setAttribute("data-reveal", "");
     });
     $$("li", body).forEach((li, i) => { li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i % 5) * 0.07 + "s"); });
+    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line", body).forEach((el, i) => {
+      el.setAttribute("data-reveal", "");
+      if (el.matches(".versus__card, .faq__item")) el.style.setProperty("--d", (i % 4) * 0.1 + "s");
+    });
+    $$(".compare tbody tr", body).forEach((tr, i) => tr.style.setProperty("--r", i));
     const quotes = $$("blockquote", body);
     quotes.forEach(bq => {
       bq.setAttribute("data-reveal", "");
