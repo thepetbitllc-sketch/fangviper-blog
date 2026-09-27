@@ -41,8 +41,6 @@
 
   
   <div class="curtain curtain--boot" aria-hidden="true"><img src="assets/img/logo-white.png" alt=""></div>
-  <div class="cursor" aria-hidden="true"><div class="cursor__ring"></div><div class="cursor__dot"></div><span class="cursor__label"></span></div>
-  <div class="grain" aria-hidden="true"></div>
   <div class="readbar" aria-hidden="true"><i data-readbar></i></div>
 
   <!-- Top: store announcement + nav -->
@@ -57,16 +55,12 @@
           <img src="assets/img/logo-white.png" alt="" class="nav__logo">
           <span class="nav__word">Fang Viper</span>
         </a>
-        <nav class="nav__links" aria-label="Categories">
-          <a href="index.html?cat=All#journal" data-cat-link="All">Journal</a>
-          <a href="index.html?cat=Mindset#journal" data-cat-link="Mindset">Mindset</a>
-          <a href="index.html?cat=Money#journal" data-cat-link="Money">Money</a>
-          <a href="index.html?cat=Fitness#journal" data-cat-link="Fitness">Fitness</a>
-          <a href="index.html?cat=Goals#journal" data-cat-link="Goals">Goals</a>
+        <nav class="nav__links" aria-label="Main">
+          <a href="#journal">Stories</a>
           <a href="index.html#challenge">Challenge</a>
+          <a href="#join">Newsletter</a>
         </nav>
         <div class="nav__right">
-          <span class="streak" data-streak title="Articles you've finished"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M4 3l6 18 2-9 2 9 6-18-8 5z" fill="currentColor"/></svg><b>0</b><span>read</span></span>
           <a class="btn btn--ghost btn--sm nav__shop" data-store href="#" target="_blank" rel="noopener">Shop <svg viewBox="0 0 24 24" width="14" height="14"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
           <button class="burger" data-burger aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
         </div>
@@ -74,17 +68,14 @@
     </header>
   </div>
 
-  <!-- Full-screen menu -->
+  <!-- Full-screen menu (phones and tablets) -->
   <div class="menu" data-menu aria-hidden="true">
     <div class="menu__inner container">
       <nav class="menu__links">
-        <a href="index.html?cat=All#journal" data-cat-link="All">Journal</a>
-        <a href="index.html?cat=Mindset#journal" data-cat-link="Mindset">Mindset</a>
-        <a href="index.html?cat=Money#journal" data-cat-link="Money">Money</a>
-        <a href="index.html?cat=Fitness#journal" data-cat-link="Fitness">Fitness</a>
-        <a href="index.html?cat=Goals#journal" data-cat-link="Goals">Goals</a>
+        <a href="#journal">Stories</a>
         <a href="index.html#challenge">Daily Challenge</a>
-        <a data-store href="#" target="_blank" rel="noopener">Shop the gear ↗</a>
+        <a href="#join">Newsletter</a>
+        <a data-store href="#" target="_blank" rel="noopener">Shop ↗</a>
       </nav>
       <p class="menu__foot">Fang Viper · Built in the dark.</p>
     </div>
@@ -243,17 +234,11 @@
         <a data-store data-q="bag" href="#" target="_blank" rel="noopener">Gym bags ↗</a>
         <a data-store data-q="journal" href="#" target="_blank" rel="noopener">Journals ↗</a>
       </div>
-      <div class="footer__col">
-        <h4>Follow</h4>
-        <a href="#" aria-label="Instagram">Instagram</a>
-        <a href="#" aria-label="TikTok">TikTok</a>
-        <a href="#" aria-label="YouTube">YouTube</a>
-      </div>
     </div>
     <div class="footer__big" data-bigword aria-hidden="true">Fang Viper</div>
     <div class="container footer__bottom">
       <span>© 2026 Fang Viper. Built in the dark.</span>
-      <span>Content is for motivation and general information — not medical advice.</span>
+      <span>Content is for motivation and general information, not medical advice.</span>
     </div>
   </footer>
 

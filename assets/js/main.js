@@ -145,11 +145,10 @@
     const read = readList().includes(p.slug);
     const prog = progressOf(p.slug);
     const partial = !read && prog > 0.05;
-    return `<a class="card" href="${postHref(p.slug)}" data-reveal data-cursor="Read" style="--d:${((i || 0) % 3) * 0.08}s">
-      <div class="card__cover">${coverArt(p)}<span class="card__word">${p.cover.word}</span><span class="card__num">${p.n}</span>
+    return `<a class="card" href="${postHref(p.slug)}" data-reveal style="--d:${((i || 0) % 3) * 0.08}s">
+      <div class="card__cover">${coverArt(p)}
         ${read ? `<span class="card__badge">${ICON.check} Finished</span>` : ""}
-        ${partial ? `<span class="card__progress" style="--p:${prog}"></span>` : ""}
-        <span class="card__glare"></span></div>
+        ${partial ? `<span class="card__progress" style="--p:${prog}"></span>` : ""}</div>
       <div class="card__body">
         <div class="card__meta"><span class="card__cat">${p.category}</span><span>${p.minutes} min read</span></div>
         <h3 class="card__title"><span>${p.title}</span></h3>
@@ -283,67 +282,7 @@
     addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
   }
 
-  function initCursor() {
-    const c = $(".cursor");
-    if (!c || !finePointer || reduced) return;
-    root.classList.add("has-cursor");
-    const dot = $(".cursor__dot", c), ring = $(".cursor__ring", c), label = $(".cursor__label", c);
-    let x = -100, y = -100, rx = -100, ry = -100;
-    addEventListener("mousemove", e => { x = e.clientX; y = e.clientY; }, { passive: true });
-    document.addEventListener("mousedown", () => c.classList.add("is-down"));
-    document.addEventListener("mouseup", () => c.classList.remove("is-down"));
-    document.documentElement.addEventListener("mouseleave", () => c.classList.add("is-hidden"));
-    document.documentElement.addEventListener("mouseenter", () => c.classList.remove("is-hidden"));
-    document.addEventListener("mouseover", e => {
-      const t = e.target.closest("[data-cursor], a, button, label, [role=tab], summary");
-      c.classList.remove("is-link", "is-label");
-      if (!t || t.matches("label")) return;
-      if (t.dataset.cursor) { label.textContent = t.dataset.cursor; c.classList.add("is-label"); }
-      else c.classList.add("is-link");
-    });
-    (function loop() {
-      rx += (x - rx) * 0.18; ry += (y - ry) * 0.18;
-      dot.style.transform = `translate3d(${x}px,${y}px,0)`;
-      ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
-      label.style.transform = `translate3d(${rx}px,${ry}px,0) translate(-50%,-50%)`;
-      requestAnimationFrame(loop);
-    })();
-  }
-
-  function initMagnetic() {
-    if (!finePointer || reduced) return;
-    let cur = null;
-    const reset = el => { el.style.setProperty("--bx", "0px"); el.style.setProperty("--by", "0px"); };
-    document.addEventListener("mousemove", e => {
-      const el = e.target.closest("[data-magnetic]");
-      if (cur && cur !== el) reset(cur);
-      cur = el;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      el.style.setProperty("--bx", f1((e.clientX - r.left - r.width / 2) * 0.25) + "px");
-      el.style.setProperty("--by", f1((e.clientY - r.top - r.height / 2) * 0.35) + "px");
-    }, { passive: true });
-  }
-
-  function initTilt() {
-    if (!finePointer || reduced) return;
-    let cur = null;
-    const reset = c => { c.classList.remove("tilting"); c.style.setProperty("--rx", "0deg"); c.style.setProperty("--ry", "0deg"); };
-    document.addEventListener("mousemove", e => {
-      const card = e.target.closest(".card");
-      if (cur && cur !== card) reset(cur);
-      cur = card;
-      if (!card) return;
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-      card.classList.add("tilting");
-      card.style.setProperty("--ry", ((px - 0.5) * 8).toFixed(2) + "deg");
-      card.style.setProperty("--rx", ((0.5 - py) * 8).toFixed(2) + "deg");
-      card.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
-      card.style.setProperty("--my", (py * 100).toFixed(1) + "%");
-    }, { passive: true });
-  }
-
+  // Slow, steady ticker. It drifts a little faster while the page is being scrolled.
   function initMarquee() {
     $$("[data-marquee]").forEach(m => {
       const track = $(".marquee__track", m);
@@ -351,58 +290,36 @@
       track.innerHTML = html + html + html + html;
       if (reduced) return;
       const dir = m.dataset.dir === "right" ? 1 : -1;
-      let unit = 0, x = 0, boost = 0, skew = 0, sdir = 1, lastY = scrollY, visible = true;
+      let unit = 0, x = 0, boost = 0, lastY = scrollY, visible = true;
       const measure = () => { unit = track.scrollWidth / 4; x = dir > 0 ? -unit : 0; };
       measure();
       addEventListener("resize", measure);
       if (document.fonts) document.fonts.ready.then(measure);
       new IntersectionObserver(e => { visible = e[0].isIntersecting; }).observe(m);
       (function loop() {
-        const dy = scrollY - lastY; lastY = scrollY;
-        if (Math.abs(dy) > 1) sdir = dy > 0 ? 1 : -1;
-        boost += (Math.min(Math.abs(dy), 90) * 0.28 - boost) * 0.08;
-        skew += (clamp(dy * 0.22, -10, 10) - skew) * 0.1;
+        const dy = Math.abs(scrollY - lastY); lastY = scrollY;
+        boost += (Math.min(dy, 60) * 0.08 - boost) * 0.06;
         if (visible && unit) {
-          x += dir * sdir * (0.8 + boost);
+          x += dir * (0.45 + boost);
           if (x <= -unit) x += unit;
           if (x > 0) x -= unit;
-          track.style.transform = `translate3d(${x}px,0,0) skewX(${f1(-skew)}deg)`;
+          track.style.transform = `translate3d(${f1(x)}px,0,0)`;
         }
         requestAnimationFrame(loop);
       })();
     });
   }
 
+  // Hero logo drifts slightly slower than the page as you scroll.
   function initParallax() {
     const els = $$("[data-parallax]");
     if (!els.length || reduced) return;
-    let mx = 0, my = 0, cx = 0, cy = 0;
-    if (finePointer) addEventListener("mousemove", e => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
-    (function loop() {
-      cx += (mx - cx) * 0.06; cy += (my - cy) * 0.06;
-      if (scrollY < innerHeight * 1.3) els.forEach(el => { el.style.translate = `${f1(cx * -40)}px ${f1(scrollY * 0.35 + cy * -40)}px`; });
-      requestAnimationFrame(loop);
-    })();
-  }
-
-  function initCounters() {
-    $$("[data-count]").forEach(el => {
-      const to = el.dataset.count === "posts" ? POSTS.length : Number(el.dataset.count);
-      const from = Number(el.dataset.from || 0), suf = el.dataset.suffix || "";
-      el.textContent = from + suf;
-      if (reduced || !("IntersectionObserver" in window)) { el.textContent = to + suf; return; }
-      const run = () => {
-        const t0 = performance.now(), dur = 1900;
-        const step = now => {
-          const k = Math.min(1, (now - t0) / dur);
-          const e = k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
-          el.textContent = Math.round(from + (to - from) * e) + suf;
-          if (k < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-      };
-      new IntersectionObserver((ents, o) => { if (ents[0].isIntersecting) { run(); o.disconnect(); } }, { threshold: 0.6 }).observe(el);
-    });
+    let ticking = false;
+    const apply = () => {
+      ticking = false;
+      if (scrollY < innerHeight * 1.3) els.forEach(el => { el.style.translate = `0 ${f1(scrollY * 0.25)}px`; });
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } }, { passive: true });
   }
 
   // black curtain that wipes over the screen while the view swaps
@@ -511,35 +428,37 @@
   function renderFeatured(p) {
     const el = $("[data-featured]");
     if (!el || !p) return;
-    el.innerHTML = `<a class="feat" href="${postHref(p.slug)}" data-cursor="Read">
-      <div class="feat__media" data-reveal="clip">${coverArt(p)}<span class="feat__tag">Featured story</span><span class="feat__word">${p.cover.word}</span></div>
+    el.innerHTML = `<a class="feat" href="${postHref(p.slug)}">
+      <div class="feat__media" data-reveal="clip">${coverArt(p)}<span class="feat__tag">Latest story</span></div>
       <div class="feat__body">
         <div class="feat__meta" data-reveal><b>${p.category}</b><span>${p.minutes} min read</span><span>${fmtDate(p.date)}</span></div>
-        <h2 class="feat__title" data-split>${p.title}</h2>
+        <h3 class="feat__title" data-split>${p.title}</h3>
         <p class="feat__excerpt" data-reveal style="--d:.15s">${p.excerpt}</p>
         <span class="btn btn--light" data-reveal style="--d:.25s">Read the story ${ICON.arrow}</span>
       </div>
     </a>`;
   }
 
-  // Filler cards keep the grid from looking empty while the journal is still small.
-  const SOON_CARDS = [
-    { href: "#join", word: "NEXT", cat: "Coming soon", meta: "New story", title: "The next story is being written.", text: "Mindset, money and training, one post at a time. Join the pack to get it first.", more: "Join the pack", cursor: "Join" },
-    { href: "#challenge", word: "TODAY", cat: "Daily challenge", meta: "Live now", title: "Don't just read about discipline.", text: "Today's challenge is live. Tap through every rep and earn your streak.", more: "Take the challenge", cursor: "Go" }
-  ];
-  const soonHTML = s => `<a class="card card--soon" href="${s.href}" data-reveal data-cursor="${s.cursor}">
-      <div class="card__cover card__cover--soon"><span class="card__word">${s.word}</span><span class="card__glare"></span></div>
-      <div class="card__body">
-        <div class="card__meta"><span class="card__cat">${s.cat}</span><span>${s.meta}</span></div>
-        <h3 class="card__title"><span>${s.title}</span></h3>
-        <p class="card__excerpt">${s.text}</p>
-        <span class="card__more">${s.more} ${ICON.right}</span>
-      </div>
-    </a>`;
-
+  // Lists every story except the latest one. While there are none, the store banner
+  // sits under the latest story instead of an empty list.
   function initJournal(list) {
-    const grid = $("[data-grid]"), chips = $("[data-chips]"), search = $("[data-search]"), empty = $("[data-empty]");
-    if (!grid) return;
+    const more = $("[data-more]"), grid = $("[data-grid]"), chips = $("[data-chips]"), search = $("[data-search]");
+    const empty = $("[data-empty]"), toolbar = $("[data-toolbar]"), strip = $("[data-store-strip]");
+    if (!grid) return null;
+    const adCard = ADS ? ADS.feedCard() : null;
+    const toJournal = () => {
+      if (currentView === "article") { location.hash = "journal"; return; }
+      $("#journal").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    };
+
+    if (!list.length) {
+      if (strip && adCard) { adCard.classList.add("card--wide"); strip.appendChild(adCard); strip.hidden = false; }
+      $$("[data-cat-link]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); toJournal(); }));
+      return { refresh() {} };
+    }
+
+    more.hidden = false;
+    toolbar.hidden = list.length < 4; // filters only help once there is something to filter
     // only offer categories that have at least one post
     const CATS = (window.FV_CATEGORIES || ["All"]).filter(c => c === "All" || list.some(p => p.category === c));
     let cat = new URLSearchParams(location.search).get("cat");
@@ -549,21 +468,15 @@
       const n = c === "All" ? list.length : list.filter(p => p.category === c).length;
       return `<button class="chip" role="tab" aria-selected="${c === cat}" data-chip="${c}">${c}<sup>${n}</sup></button>`;
     }).join("");
-    const adCard = ADS ? ADS.feedCard() : null;
-    if (adCard) adCard.dataset.cursor = "Shop";
 
     function render(animate) {
       const items = list.filter(p => (cat === "All" || p.category === cat) &&
         (!q || (p.title + " " + p.excerpt + " " + p.category + " " + (p.keywords || []).join(" ")).toLowerCase().includes(q)));
       const paint = () => {
         grid.innerHTML = items.map(cardHTML).join("");
-        if (adCard && items.length >= 1) {
+        if (adCard && items.length) {
           adCard.classList.remove("in");
           grid.insertBefore(adCard, grid.children[Math.min(4, items.length)] || null);
-        }
-        if (!q && items.length) {
-          let k = 0;
-          while (grid.children.length < 3 && k < SOON_CARDS.length) grid.insertAdjacentHTML("beforeend", soonHTML(SOON_CARDS[k++]));
         }
         empty.hidden = items.length > 0;
         grid.classList.remove("switching");
@@ -587,11 +500,11 @@
       if (currentView === "article") {
         cat = CATS.includes(a.dataset.catLink) ? a.dataset.catLink : "All";
         $$(".chip", chips).forEach(b => b.setAttribute("aria-selected", String(b.dataset.chip === cat)));
-        location.hash = "journal";
+        toJournal();
         return;
       }
       setCat(a.dataset.catLink);
-      $("#journal").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+      toJournal();
     }));
     render(false);
     return { refresh: () => render(false) };
@@ -610,13 +523,6 @@
       nxt.style.transition = "none"; nxt.classList.remove("is-out"); void nxt.offsetWidth; nxt.style.transition = "";
       nxt.classList.add("is-on");
     }, 2200);
-  }
-
-  function initClock() {
-    const c = $("[data-clock]");
-    if (!c) return;
-    const t = () => { c.textContent = new Date().toLocaleTimeString("en-GB"); };
-    t(); setInterval(t, 1000);
   }
 
   function initResume() {
@@ -742,13 +648,11 @@
 
   let journal = null;
   function initHome() {
-    // newest post is featured (or one marked `featured: true`); it also stays in the grid
-    // until there are enough posts to fill the grid without it
+    // newest post is featured (or one marked `featured: true`); the list below holds the rest
     const featured = POSTS.find(p => p.featured) || POSTS[0];
     renderFeatured(featured);
-    journal = initJournal(POSTS.length >= 4 ? POSTS.filter(p => p !== featured) : POSTS);
+    journal = initJournal(POSTS.filter(p => p !== featured));
     initRotator();
-    initClock();
     initResume();
     initChallenge();
     initQuotes();
@@ -770,6 +674,7 @@
 
     const idx = POSTS.indexOf(p);
     const next = POSTS[(idx + 1) % POSTS.length];
+    const hasNext = POSTS.length > 1;
     const more = POSTS.filter(x => x !== p && x !== next)
       .sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 3);
     const myFangs = LS.get("fv_fangs", {})[p.slug] || 0;
@@ -782,14 +687,12 @@
         <div class="a-kicker"><b>${p.category}</b><span>${fmtDate(p.date)}</span><span>${p.minutes} min read</span><span>By Fang Viper</span></div>
         <h1 class="a-title" data-split>${p.title}</h1>
         <p class="a-dek" data-reveal style="--d:.3s">${p.excerpt}</p>
-        <div class="a-cover" data-reveal="clip">${coverArt(p)}<span class="card__word">${p.cover.word}</span></div>
+        <div class="a-cover" data-reveal="clip">${coverArt(p)}</div>
       </header>
       <div class="a-layout container">
         <aside class="a-rail" aria-label="Reading progress">
           <div class="a-ring"><svg viewBox="0 0 96 96" aria-hidden="true"><circle class="t" cx="48" cy="48" r="44"/><circle class="b" cx="48" cy="48" r="44" data-ring/></svg><span class="a-ring__pct" data-pct>0</span></div>
           <div class="a-rail__block a-rail__block--time"><div class="a-rail__label">Time left</div><div class="a-rail__val" data-left>${p.minutes}:00</div></div>
-          <div class="a-rail__block a-rail__block--reps"><div class="a-rail__label">Section reps</div><div class="a-rail__val">Rep <span class="a-reps-val" data-reps>0</span> / <span data-reps-total>0</span></div><div class="a-reps" data-rep-dots></div></div>
-          <button class="fang-btn${myFangs ? " on" : ""}" data-fang aria-label="Fang this article">${ICON.fang}<span data-fang-n>${myFangs || "Fang it"}</span></button>
           ${embedded ? "" : `<div class="share"><button data-copy data-tip="Copied" aria-label="Copy link">${ICON.link}</button><a data-share-x href="#" target="_blank" rel="noopener" aria-label="Share on X">${ICON.xlogo}</a></div>`}
         </aside>
         <article class="prose" id="article-body">${p.body}</article>
@@ -797,22 +700,22 @@
       </div>
       <section class="finish" data-finish>
         <div class="container">
-          <div class="finish__stamp">Set<br>complete</div>
+          <p class="eyebrow">End of story</p>
+          <div class="finish__stamp">Keep going.</div>
           <p class="finish__sub">You read every word. That's the same discipline that builds everything else.</p>
           <div class="finish__badge" data-badge></div>
           <div class="finish__actions">
-            <button class="btn btn--ghost" data-fang>${ICON.fang} Fang it</button>
-            <a class="btn btn--light" href="${postHref(next.slug)}" data-magnetic>Next rep ${ICON.right}</a>
+            <button class="btn btn--ghost" data-fang>${ICON.fang} <span data-fang-n>${myFangs ? `Fanged ${myFangs}` : "Fang it"}</span></button>
+            ${hasNext ? `<a class="btn btn--light" href="${postHref(next.slug)}">Next story ${ICON.right}</a>` : `<a class="btn btn--light" href="${homeHref("join")}">Get the next story ${ICON.right}</a>`}
           </div>
         </div>
       </section>
-      <section class="next container">
-        <p class="next__label"><i></i>Up next — keep the streak alive</p>
-        <a class="next__link" href="${postHref(next.slug)}" data-next data-cursor="Next">${next.title}<small>${next.category} · ${next.minutes} min read</small></a>
+      ${hasNext ? `<section class="next container">
+        <p class="next__label"><i></i>Up next</p>
+        <a class="next__link" href="${postHref(next.slug)}" data-next>${next.title}<small>${next.category} · ${next.minutes} min read</small></a>
         <div class="next__float" data-next-float aria-hidden="true">${coverArt(next)}</div>
-        <p class="next__more-title">More from the journal</p>
-        <div class="grid">${more.map(cardHTML).join("")}</div>
-      </section>`;
+        ${more.length ? `<p class="next__more-title">More from the journal</p><div class="grid">${more.map(cardHTML).join("")}</div>` : ""}
+      </section>` : ""}`;
 
     const body = $("#article-body");
     const h2s = $$("h2", body);
@@ -845,11 +748,6 @@
       ADS.railAd($("[data-rail-ad]"));
     }
 
-    // rail: reps
-    $("[data-reps-total]").textContent = h2s.length;
-    $("[data-rep-dots]").innerHTML = h2s.map(() => "<i></i>").join("");
-    const dots = $$("[data-rep-dots] i");
-
     // share (hidden when the page runs inside an embedded preview)
     const shareX = $("[data-share-x]"), copyBtn = $("[data-copy]");
     if (shareX) shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(p.title + " — Fang Viper")}&url=${encodeURIComponent(location.href)}`;
@@ -867,16 +765,15 @@
       if (fangs >= 50) { floatText(x, r.top, "Max fangs", "#fff"); return; }
       fangs++;
       const all = LS.get("fv_fangs", {}); all[p.slug] = fangs; LS.set("fv_fangs", all);
-      fangN.textContent = fangs;
-      $("[data-fang]", main).classList.add("on");
+      fangN.textContent = `Fanged ${fangs}`;
       burst(x, y, "#fff", 14);
       floatText(x, r.top, "+1", "#fff");
     }));
 
-    // progress, reps, quote lighting
-    const ring = $("[data-ring]"), pct = $("[data-pct]"), left = $("[data-left]"), repsEl = $("[data-reps]"), readbar = $("[data-readbar]");
+    // progress and quote lighting
+    const ring = $("[data-ring]"), pct = $("[data-pct]"), left = $("[data-left]"), readbar = $("[data-readbar]");
     const RC = 2 * Math.PI * 44;
-    let lastReps = -1, maxP = progressOf(p.slug), ticking = false, prog = 0;
+    let maxP = progressOf(p.slug), ticking = false, prog = 0;
     const update = () => {
       ticking = false;
       if (!alive) return;
@@ -887,14 +784,6 @@
       if (readbar) readbar.style.transform = `scaleX(${prog})`;
       const secs = Math.max(0, Math.round(p.minutes * 60 * (1 - prog)));
       left.textContent = prog >= 0.99 ? "Done" : `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
-      const entered = h2s.filter(h => h.getBoundingClientRect().top < innerHeight * 0.45).length;
-      const reps = clamp(entered - 1 + (prog >= 0.98 ? 1 : 0), 0, h2s.length);
-      if (reps !== lastReps) {
-        repsEl.textContent = reps;
-        dots.forEach((d, i) => d.classList.toggle("on", i < reps));
-        if (lastReps >= 0 && reps > lastReps) restart(repsEl, "bump");
-        lastReps = reps;
-      }
       if (prog > maxP + 0.02) { maxP = prog; saveProgress(p.slug, maxP); }
       quotes.forEach(q => {
         const qr = q.getBoundingClientRect();
@@ -1029,12 +918,9 @@
 
   initNav();
   initMenu();
-  initCursor();
   initAnchors();
   initTransitions();
   initToTop();
-  initMagnetic();
-  initTilt();
   initBigWord();
   initParallax();
   initHome();
@@ -1063,7 +949,6 @@
 
   observe();
   initMarquee();
-  initCounters();
   updateStreak();
   if (ADS) ADS.boot();
 })();

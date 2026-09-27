@@ -134,7 +134,7 @@
           <ul class="ad-modal__list">
             ${ps.map((p, i) => `<li class="${i === 0 ? "on" : ""}"><a href="${link(p, "modal_" + trigger)}" target="_blank" rel="noopener"><span>${p.name}</span><b>${p.price}</b></a></li>`).join("")}
           </ul>
-          <a class="btn btn--light btn--block" data-magnetic href="${link(null, "modal_" + trigger)}" target="_blank" rel="noopener">Shop FangViper.com ${ARROW}</a>
+          <a class="btn btn--light btn--block" href="${link(null, "modal_" + trigger)}" target="_blank" rel="noopener">Shop FangViper.com ${ARROW}</a>
           <button class="ad-modal__skip" data-close>No thanks, keep reading</button>
         </div>
       </div>`;
