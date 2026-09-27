@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /tools/
 
-Sitemap: https://thepetbitllc-sketch.github.io/fangviper-blog/sitemap.xml
+Sitemap: https://blog.fangviper.com/sitemap.xml

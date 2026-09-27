@@ -1,8 +1,8 @@
 # Fang Viper Journal
 
-Black-and-white motivation and fitness blog for the Fang Viper brand. Ads on the site promote the store at [fangviper.com](https://fangviper.com).
+Black-and-white discipline and motivation blog for the Fang Viper brand, for the gym, the business and every goal. Ads on the site promote the store at [fangviper.com](https://fangviper.com).
 
-Live site: https://thepetbitllc-sketch.github.io/fangviper-blog/
+Live site: https://blog.fangviper.com/
 
 ## Editing
 
@@ -14,4 +14,4 @@ Live site: https://thepetbitllc-sketch.github.io/fangviper-blog/
   powershell -ExecutionPolicy Bypass -File tools\build-pages.ps1
   ```
 
-  To move the site to its own domain later, run it once with `-SiteUrl https://blog.fangviper.com`.
+  The site address used in search tags lives in `tools/site-url.txt` (currently https://blog.fangviper.com).
