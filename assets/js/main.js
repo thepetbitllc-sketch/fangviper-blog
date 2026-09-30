@@ -480,7 +480,11 @@
           grid.insertBefore(adCard, grid.children[Math.min(4, items.length)] || null);
         }
         empty.hidden = items.length > 0;
-        grid.classList.toggle("grid--2", [2, 4].includes(grid.children.length)); // 2 or 4 cards read better as two wide columns than an orphaned row
+        const count = grid.children.length;
+        grid.classList.toggle("grid--2", [2, 4].includes(count)); // 2 or 4 cards read better as two wide columns than an orphaned row
+        // with 5, 8... cards in three columns, let the ad stretch across two so the last row is full
+        const span = !!adCard && grid.contains(adCard) && count > 4 && count % 3 === 2;
+        if (adCard) { adCard.classList.toggle("card--span2", span); adCard.classList.toggle("card--wide", span); }
         grid.classList.remove("switching");
         observe(grid);
       };
@@ -728,6 +732,27 @@
     $$("li", body).forEach((li, i) => { li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i % 5) * 0.07 + "s"); });
     // links to other posts are written as data-post="slug"; point them at the right address for this host
     $$("a[data-post]", body).forEach(a => a.setAttribute("href", postHref(a.dataset.post)));
+    // "heating water" analogy: each tap heats it to the next stage from the article
+    $$("[data-boil]", body).forEach(box => {
+      const STEPS = [
+        [50, "At 50°C, nothing looks different."],
+        [90, "At 90°C, still nothing dramatic."],
+        [99, "At 99°C, it's still just hot water."],
+        [100, "Then at 100°C, it boils. Every degree mattered."]
+      ];
+      const temp = $("[data-boil-temp]", box), msg = $("[data-boil-msg]", box), btn = $("[data-boil-next]", box);
+      let k = 0;
+      const paint = () => {
+        const [t, text] = STEPS[k];
+        box.style.setProperty("--t", t + "%");
+        temp.textContent = t + "°C";
+        msg.textContent = text;
+        box.dataset.state = t === 100 ? "boil" : "";
+        btn.textContent = t === 100 ? "Start again" : "Keep heating";
+        restart(temp, "bump");
+      };
+      on(btn, "click", () => { k = (k + 1) % STEPS.length; paint(); });
+    });
     // "signs you're in the middle": readers tap the ones that sound familiar
     $$("[data-signs]", body).forEach(box => {
       const out = $("[data-signs-result]", box);
@@ -770,7 +795,7 @@
         });
       });
     });
-    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also, .doubt-check, .stage, .checkpoints, .signs", body).forEach((el, i) => {
+    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also, .doubt-check, .stage, .checkpoints, .signs, .attempt, .boil", body).forEach((el, i) => {
       el.setAttribute("data-reveal", "");
       if (el.matches(".versus__card, .faq__item")) el.style.setProperty("--d", (i % 4) * 0.1 + "s");
     });

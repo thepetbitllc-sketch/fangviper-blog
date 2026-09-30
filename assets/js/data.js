@@ -225,7 +225,7 @@ window.FV_POSTS = [
 </figure>
 <blockquote>You can't see how close you are from where you're standing. That's exactly why you keep going.</blockquote>
 <p>If you're reading this in the middle of that quiet, tired moment, <mark>don't make a permanent decision tonight.</mark> Sleep, get up, and do one small thing tomorrow. Then do it again.</p>
-<p class="see-also">If motivation is fading, start with the foundation. Read <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation: Why Motivation Fades and What Actually Keeps You Going</a>. Building a business with no money? Read <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>. Losing steam halfway? Read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
+<p class="see-also">If motivation is fading, start with the foundation. Read <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation: Why Motivation Fades and What Actually Keeps You Going</a>. Building a business with no money? Read <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>. Losing steam halfway? Read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>. Training hard but not seeing results? Read <a class="text-cta" data-post="how-to-stay-motivated-to-run" href="how-to-stay-motivated-to-run/">How to Stay Motivated to Run When Results Are Slow</a>.</p>
 <p class="cta-line">And for a daily reminder of why you started, <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">explore the FangViper collection</a>, made for people who keep going when no one is watching.</p>
 
 <h2>Frequently Asked Questions</h2>
@@ -480,6 +480,115 @@ window.FV_POSTS = [
   <details class="faq__item">
     <summary>How do I know when to quit a project?</summary>
     <p>Ask whether you're stopping because it's difficult or because it's genuinely no longer right for you. Difficulty is normal in the middle. If the goal no longer matches what you want, letting it go can be a valid decision.</p>
+  </details>
+</div>
+`
+  },
+  {
+    slug: "how-to-stay-motivated-to-run",
+    title: "How to Stay Motivated to Run (or Train) When Results Are Slow",
+    seoTitle: "How to Stay Motivated to Run When Results Are Slow",
+    category: "Fitness",
+    date: "2026-09-30",
+    excerpt: "Training hard but not seeing results? Learn why progress feels slow, what's really happening beneath the surface, and how to stay motivated to run and train when the numbers won't move.",
+    keywords: ["how to stay motivated to run", "running motivation", "no progress running", "training plateau", "fitness plateau motivation", "why am I not getting faster"],
+    cover: { type: "photo", src: "assets/img/posts/training-log.jpg", alt: "how to stay motivated to run when results are slow", word: "PACE" },
+    adMatch: "hydrate",
+    body: `
+<p>You've been showing up. Early mornings, sore legs, runs in the cold and the heat. And yet your pace barely moves. The stopwatch doesn't care how hard you've worked, and neither does the mirror.</p>
+<p>That's one of the hardest parts of training for anything, whether it's running, lifting, a sport, or any skill that takes time. Effort is immediate. Results are slow.</p>
+<p><mark>But slow doesn't mean nothing is happening.</mark></p>
+
+<h2>The Man Who Missed by 25 Seconds</h2>
+<p>In May 2017, Kenyan runner Eliud Kipchoge attempted something no human had ever done: run a marathon in under two hours. After months of preparation, on a racetrack in Monza, Italy, he finished in 2:00:25.</p>
+<p>Twenty-five seconds short. Over 42 kilometers, that's almost nothing, and after all that work, it still wasn't enough.</p>
+<p>He didn't quit. He went back to the same kind of training that got him there. Two years later, in Vienna in October 2019, he ran 1:59:40, becoming the first person to cover the marathon distance in under two hours. (The run wasn't an official world record because of the special race conditions, but it proved the barrier could be broken.)</p>
+<div class="attempts">
+  <div class="attempt"><span class="attempt__when">May 2017 · Monza, Italy</span><strong class="attempt__time">2:00:25</strong><span class="attempt__note">25 seconds short</span></div>
+  <div class="attempt attempt--done"><span class="attempt__when">October 2019 · Vienna</span><strong class="attempt__time">1:59:40</strong><span class="attempt__note">First marathon distance under two hours</span></div>
+</div>
+<p>Kipchoge is also known for recording his training by hand in notebooks, day after day, year after year. One of the greatest runners in history built his results the same way you build yours: one ordinary session at a time.</p>
+<p>Your goal doesn't have to be a world first. But the lesson is the same. <mark>Falling short isn't the end of the road. It's information for the next attempt.</mark></p>
+
+<h2>Why Results Feel So Slow</h2>
+<p>Think about heating water. At 50°C, nothing looks different. At 90°C, still nothing dramatic. At 99°C, it's still just hot water. Then at 100°C, it boils.</p>
+<div class="boil" data-boil>
+  <div class="boil__gauge" aria-hidden="true"><div class="boil__fill"></div><div class="boil__bubbles"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="boil__read">
+    <span class="boil__temp" data-boil-temp>50°C</span>
+    <p class="boil__msg" data-boil-msg aria-live="polite">At 50°C, nothing looks different.</p>
+  </div>
+  <button type="button" class="btn btn--ghost btn--sm boil__btn" data-boil-next>Keep heating</button>
+</div>
+<p>Every degree mattered. You just couldn't see it until the end.</p>
+<p>Training works the same way. When you run or train, your body adapts gradually: your heart gets stronger, your muscles get more efficient, your breathing improves. These changes build for weeks before they show up as a faster time or a visible difference. <mark>The work is happening. The results are just catching up.</mark></p>
+
+<h2>Plateaus Are Normal</h2>
+<p>Almost everyone who trains hits a plateau, a stretch where progress seems to stop completely. It often happens after a strong start, which makes it even more frustrating.</p>
+<p>Plateaus usually happen because:</p>
+<ul>
+  <li>Your body has adapted to the same routine</li>
+  <li>You're not recovering enough between sessions</li>
+  <li>Sleep, food, or stress is holding you back</li>
+  <li>Early gains were easy, and later gains naturally come slower</li>
+</ul>
+<p>A plateau isn't proof that you've reached your limit. It's usually a sign that something needs to change, not that you should stop.</p>
+
+<h2>How to Stay Motivated When Progress Stalls</h2>
+<h3><span class="step-n">1</span> Keep a training log</h3>
+<p>Write down every session: distance, time, how you felt. Like Kipchoge's notebooks, a log turns vague effort into visible proof. On days when you feel like you're going nowhere, flip back a few months. You'll often find you're running further, recovering faster, or feeling stronger than you remember.</p>
+<h3><span class="step-n">2</span> Measure more than speed</h3>
+<p>Pace and weight aren't the only signs of progress. Notice other wins:</p>
+<ul class="scoreboard">
+  <li>Runs that used to leave you exhausted now feel manageable</li>
+  <li>Your resting energy is better</li>
+  <li>You sleep more deeply</li>
+  <li>You recover faster</li>
+</ul>
+<p>These changes usually come before the numbers move.</p>
+<h3><span class="step-n">3</span> Change something small</h3>
+<p>If you've done the same routine for months, your body has little reason to keep adapting. Add one change at a time: a weekly hill session, a slightly longer run, a different pace, strength work. Small variety restarts progress without wrecking your routine.</p>
+<h3><span class="step-n">4</span> Rest like it's part of training</h3>
+<p>It is. Your body gets stronger during recovery, not during the session itself. Running hard every single day can actually slow your progress. Plan easy days and rest days, and treat sleep as seriously as your workouts.</p>
+<h3><span class="step-n">5</span> Set process goals, not just result goals</h3>
+<p>"Run a faster 10K" depends on things you can't fully control. "Run four times this week" depends only on you. Process goals give you something to win every week, even when the big result is still on its way.</p>
+<div class="table-wrap">
+  <table class="compare">
+    <thead><tr><th scope="col">Result goal</th><th scope="col">Process goal</th></tr></thead>
+    <tbody>
+      <tr><td>Run a faster 10K</td><td>Run four times this week</td></tr>
+      <tr><td>Depends on things you can't fully control</td><td>Depends only on you</td></tr>
+    </tbody>
+  </table>
+</div>
+<h3><span class="step-n">6</span> Train with someone, or for someone</h3>
+<p>Running alone every day can drain your motivation. A training partner, a local running group, or even a friend you check in with makes it harder to skip. And sometimes remembering who you're doing it for (your children, your health, your younger self) gives you a reason on the days you can't find one.</p>
+<h3><span class="step-n">7</span> Remember why you started</h3>
+<p>Maybe it wasn't about speed at all. Maybe it was about health, discipline, clearing your head, or proving something to yourself. When results are slow, the original reason is often still being met, even if the stopwatch doesn't show it.</p>
+
+<h2>The Days Nobody Sees Build the Days Everyone Sees</h2>
+<p>When people watch a race, they see the finish, the medal, the fast time. They don't see the thousands of ordinary runs behind it, the early mornings, the plateaus, the attempts that fell short.</p>
+<blockquote>Your slow weeks are part of the story. Keep heating the water. It boils eventually.</blockquote>
+<p class="see-also">If you're struggling to keep going, read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a> and <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
+<p class="cta-line">Carry the reminder on every run and every session. <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who keep showing up.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq">
+  <details class="faq__item">
+    <summary>Why am I not getting faster at running?</summary>
+    <p>Common reasons include doing the same routine for too long, not recovering enough, poor sleep, or simply being in a normal plateau. Adding variety such as hill work, longer runs, or rest days often restarts progress.</p>
+  </details>
+  <details class="faq__item">
+    <summary>How long does it take to see running results?</summary>
+    <p>It varies by person, but many improvements in endurance and fitness take several weeks of consistent training before they show clearly in pace or distance. Changes often happen inside the body before they appear on the stopwatch.</p>
+  </details>
+  <details class="faq__item">
+    <summary>How do I stay motivated to run every day?</summary>
+    <p>Focus on process goals, keep a training log, run with others when possible, and include easy days. Running hard every day can lead to burnout, so balance effort with recovery.</p>
+  </details>
+  <details class="faq__item">
+    <summary>What should I do when I hit a fitness plateau?</summary>
+    <p>Change one variable at a time, such as intensity, distance, or type of training, and check your recovery, sleep, and nutrition. Plateaus are normal and usually temporary when you adjust your approach.</p>
   </details>
 </div>
 `

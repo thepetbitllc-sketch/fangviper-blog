@@ -696,6 +696,40 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
 .signs[data-state="middle"] .signs-result { color: #fff; }
 .signs-result.flash { animation: flash .6s var(--ease); }
 
+/* two attempts side by side (post 5) */
+.attempts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 1.3em; }
+.attempt { display: flex; flex-direction: column; gap: 6px; padding: 20px 22px; border: 1px dashed var(--line2); border-radius: 8px; }
+.attempt--done { background: #fff; border: 1px solid #fff; }
+.attempt__when { font: 600 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.attempt--done .attempt__when { color: #555; }
+.prose .attempt__time { font: clamp(44px, 5vw, 64px)/1 var(--display); font-weight: 400; letter-spacing: .01em; color: var(--mute); font-variant-numeric: tabular-nums; }
+.prose .attempt--done .attempt__time { color: #000; }
+.attempt__note { font-size: 15px; color: var(--mute); }
+.attempt--done .attempt__note { color: #333; }
+
+/* heating-water analogy: tap to heat, boils at 100 */
+.boil { --t: 50%; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px 20px; margin: 0 0 1.3em; padding: 26px 22px 22px; border: 1px solid var(--line2); border-radius: 8px; background: var(--bg2); }
+.boil__gauge { grid-column: 1 / -1; position: relative; height: 14px; border-radius: 999px; background: var(--line); }
+.boil__fill { width: var(--t); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #4a4a4a, #fff); transition: width .9s var(--ease), box-shadow .6s; }
+.boil[data-state="boil"] .boil__fill { box-shadow: 0 0 18px rgba(255,255,255,.55); }
+.boil__bubbles { position: absolute; right: 6px; bottom: 100%; width: 60px; height: 44px; pointer-events: none; }
+.boil__bubbles i { position: absolute; bottom: 0; width: 8px; height: 8px; border: 1.5px solid #fff; border-radius: 50%; opacity: 0; }
+.boil__bubbles i:nth-child(1) { left: 4px; } .boil__bubbles i:nth-child(2) { left: 16px; width: 6px; height: 6px; }
+.boil__bubbles i:nth-child(3) { left: 26px; } .boil__bubbles i:nth-child(4) { left: 36px; width: 5px; height: 5px; }
+.boil__bubbles i:nth-child(5) { left: 44px; } .boil__bubbles i:nth-child(6) { left: 52px; width: 6px; height: 6px; }
+.boil[data-state="boil"] .boil__bubbles i { animation: bubble 1.4s ease-in infinite; }
+.boil[data-state="boil"] .boil__bubbles i:nth-child(2) { animation-delay: .3s; }
+.boil[data-state="boil"] .boil__bubbles i:nth-child(3) { animation-delay: .6s; }
+.boil[data-state="boil"] .boil__bubbles i:nth-child(4) { animation-delay: .15s; }
+.boil[data-state="boil"] .boil__bubbles i:nth-child(5) { animation-delay: .9s; }
+.boil[data-state="boil"] .boil__bubbles i:nth-child(6) { animation-delay: .45s; }
+@keyframes bubble { 0% { transform: translateY(0) scale(.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-40px) scale(1.2); opacity: 0; } }
+.boil__read { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; }
+.boil__temp { display: inline-block; font: clamp(40px, 5vw, 60px)/1 var(--display); font-variant-numeric: tabular-nums; }
+.boil__temp.bump { animation: numbump .5s var(--ease); }
+.prose .boil__msg { margin: 0; color: #cfcfcf; font-size: 17px; }
+.boil[data-state="boil"] .boil__msg { color: #fff; font-weight: 600; }
+
 /* FAQ accordion */
 .faq { display: grid; gap: 10px; }
 .faq__item { border: 1px solid var(--line); border-radius: 8px; background: var(--bg2); transition: border-color .3s, background .3s; }
@@ -805,6 +839,9 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
   .signs .sign { font-size: 16px; padding-left: 52px; }
   .prose .signs li::before { left: 16px; }
   .prose .signs li::after { left: 24px; }
+  .attempts { grid-template-columns: 1fr; }
+  .boil { grid-template-columns: 1fr; }
+  .boil__btn { justify-self: start; }
   .next__float { display: none; }
   .totop { right: 12px; bottom: 12px; width: 46px; height: 46px; }
 }
@@ -812,3 +849,4 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
 }
+@media (min-width: 701px) { .grid .card--span2 { grid-column: span 2; } }
