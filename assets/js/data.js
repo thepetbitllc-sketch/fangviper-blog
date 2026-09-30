@@ -150,7 +150,7 @@ window.FV_POSTS = [
     date: "2026-09-30",
     excerpt: "Feel like quitting? Learn how to keep going when progress is slow, support is missing, and no one is watching, whether you're building a business, a home, or yourself.",
     keywords: ["how to stay motivated when you feel like giving up", "what to do when you feel like giving up", "how to keep going", "keep going when no one believes in you", "self motivation"],
-    cover: { type: "photo", src: "assets/img/hero-lift.jpg", alt: "how to stay motivated when you feel like giving up", word: "WITNESS" },
+    cover: { type: "photo", src: "assets/img/posts/alone-at-night.jpg", alt: "how to stay motivated when you feel like giving up", word: "WITNESS" },
     adMatch: "journal",
     body: `
 <p>There's a moment every person chasing something hard eventually meets. It usually comes late at night, or early in the morning, when nobody else is awake. You look at how far you still have to go, and a quiet voice says: "Why am I even doing this?"</p>
