@@ -479,6 +479,7 @@
           grid.insertBefore(adCard, grid.children[Math.min(4, items.length)] || null);
         }
         empty.hidden = items.length > 0;
+        grid.classList.toggle("grid--2", grid.children.length === 2); // two cards read better as two wide columns
         grid.classList.remove("switching");
         observe(grid);
       };
@@ -724,7 +725,9 @@
       h.setAttribute("data-reveal", "");
     });
     $$("li", body).forEach((li, i) => { li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i % 5) * 0.07 + "s"); });
-    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line", body).forEach((el, i) => {
+    // links to other posts are written as data-post="slug"; point them at the right address for this host
+    $$("a[data-post]", body).forEach(a => a.setAttribute("href", postHref(a.dataset.post)));
+    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also", body).forEach((el, i) => {
       el.setAttribute("data-reveal", "");
       if (el.matches(".versus__card, .faq__item")) el.style.setProperty("--d", (i % 4) * 0.1 + "s");
     });

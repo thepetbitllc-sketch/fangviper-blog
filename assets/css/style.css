@@ -297,6 +297,7 @@ html:not(.js) .split-w > span { transform: none; }
 
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; transition: opacity .3s; }
 .grid.switching { opacity: 0; }
+.grid.grid--2 { grid-template-columns: repeat(2, 1fr); }
 
 .card { position: relative; display: flex; flex-direction: column; overflow: hidden; background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; transition: border-color .4s; }
 .js .card[data-reveal] { transition: opacity 1s var(--ease) var(--d, 0s), transform 1s var(--ease) var(--d, 0s), border-color .4s; }
@@ -588,6 +589,13 @@ html:not(.js) .split-w > span { transform: none; }
 .drive-chart .key { stroke-width: 3.5; stroke-linecap: round; }
 .drive-chart .key--motivation { stroke: #8c8c8c; }
 .drive-chart .key--discipline { stroke: #fff; }
+.drive-chart .marker { stroke: rgba(255,255,255,.45); stroke-width: 1.5; stroke-dasharray: 5 6; opacity: 0; transition: opacity .6s ease 1.6s; }
+.drive-chart .marker-label { fill: #e6e6e6; opacity: 0; transition: opacity .6s ease 1.8s; }
+.drive-chart .knee { fill: #fff; opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity .4s ease 1.5s; }
+.drive-chart.in .marker, .drive-chart.in .marker-label, .drive-chart.in .knee,
+html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, html:not(.js) .drive-chart .knee { opacity: 1; }
+.drive-chart.in .knee { animation: knee 2.4s ease-in-out 2.2s infinite; }
+@keyframes knee { 50% { transform: scale(1.6); opacity: .55; } }
 .drive-chart figcaption { margin-top: 10px; font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
 
 /* "a motivated person asks / a disciplined person asks" */
@@ -613,6 +621,8 @@ html:not(.js) .split-w > span { transform: none; }
 .prose .cta-line { padding: 22px 24px; border: 1px solid var(--line2); border-radius: 8px; background: linear-gradient(135deg, #151515, #070707); }
 .text-cta { color: #fff; font-weight: 600; background: linear-gradient(#fff, #fff) left 100% / 100% 1px no-repeat; padding: 0 2px 2px; transition: background-size .5s var(--ease), color .3s; }
 .text-cta:hover { background-size: 100% 100%; color: #000; }
+/* link to another post */
+.prose .see-also { padding: 18px 22px; border: 1px solid var(--line); border-left: 3px solid #fff; border-radius: 4px; color: #cfcfcf; }
 
 /* FAQ accordion */
 .faq { display: grid; gap: 10px; }
@@ -689,6 +699,7 @@ html:not(.js) .split-w > span { transform: none; }
   .nav__word { font-size: 20px; }
   .nav__shop { display: none; }
   .grid { grid-template-columns: 1fr; }
+  .grid.grid--2 { grid-template-columns: 1fr; }
   .card.card--wide { grid-template-columns: 1fr; }
   .card--wide .card__cover { aspect-ratio: 16 / 10; min-height: 0; }
   .hero { padding-top: calc(var(--nav-h) + 90px); }
