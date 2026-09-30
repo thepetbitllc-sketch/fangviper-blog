@@ -480,7 +480,7 @@
           grid.insertBefore(adCard, grid.children[Math.min(4, items.length)] || null);
         }
         empty.hidden = items.length > 0;
-        grid.classList.toggle("grid--2", grid.children.length === 2); // two cards read better as two wide columns
+        grid.classList.toggle("grid--2", [2, 4].includes(grid.children.length)); // 2 or 4 cards read better as two wide columns than an orphaned row
         grid.classList.remove("switching");
         observe(grid);
       };
@@ -728,6 +728,26 @@
     $$("li", body).forEach((li, i) => { li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i % 5) * 0.07 + "s"); });
     // links to other posts are written as data-post="slug"; point them at the right address for this host
     $$("a[data-post]", body).forEach(a => a.setAttribute("href", postHref(a.dataset.post)));
+    // "signs you're in the middle": readers tap the ones that sound familiar
+    $$("[data-signs]", body).forEach(box => {
+      const out = $("[data-signs-result]", box);
+      const items = $$("li", box);
+      items.forEach(li => {
+        li.innerHTML = `<button type="button" class="sign" aria-pressed="false">${li.innerHTML}</button>`;
+        const btn = $("button", li);
+        on(btn, "click", () => {
+          const pressed = btn.getAttribute("aria-pressed") !== "true";
+          btn.setAttribute("aria-pressed", String(pressed));
+          li.classList.toggle("on", pressed);
+          const n = items.filter(x => x.classList.contains("on")).length;
+          out.textContent = n === 0 ? "Tap the signs that sound familiar."
+            : n === 1 ? `1 of ${items.length}. Anything else sound familiar?`
+            : `${n} of ${items.length}. You're not failing. You're in the middle.`;
+          box.dataset.state = n >= 2 ? "middle" : "";
+          restart(out, "flash");
+        });
+      });
+    });
     // "two honest questions" check: gives back the article's own advice for the answers chosen
     $$("[data-doubt]", body).forEach(box => {
       const answers = {};
@@ -750,7 +770,7 @@
         });
       });
     });
-    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also, .doubt-check", body).forEach((el, i) => {
+    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also, .doubt-check, .stage, .checkpoints, .signs", body).forEach((el, i) => {
       el.setAttribute("data-reveal", "");
       if (el.matches(".versus__card, .faq__item")) el.style.setProperty("--d", (i % 4) * 0.1 + "s");
     });

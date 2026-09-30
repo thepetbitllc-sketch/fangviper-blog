@@ -649,6 +649,53 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
 .doubt-check[data-state="go"] .doubt-result, .doubt-check[data-state="change"] .doubt-result { color: #fff; }
 .doubt-result.flash { animation: flash .6s var(--ease); }
 
+/* three stages of a goal; the middle is highlighted */
+.stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 1.6em; }
+.stage { padding: 20px 20px 22px; border: 1px solid var(--line2); border-radius: 8px; }
+.stage--middle { background: #fff; border-color: #fff; }
+.stage__n { font: 600 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.stage--middle .stage__n { color: #555; }
+.prose .stage h3 { display: block; margin: 8px 0 10px; font: 28px/1 var(--display); letter-spacing: .01em; text-transform: uppercase; }
+.prose .stage--middle h3 { color: #000; }
+.prose .stage p { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--mute); }
+.prose .stage--middle p { color: #333; }
+
+/* checkpoint tracks: dots fill left to right as the block scrolls in */
+.checkpoints { display: grid; gap: 10px; margin: 0 0 1.3em; padding: 20px 22px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg2); }
+.prose .checkpoints__label { margin: 0; font: 600 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.prose ol.track { display: flex; margin: 0 0 10px; padding: 0; list-style: none; }
+.prose .track li { flex: 1; position: relative; padding: 28px 8px 0 0; border: 0; border-radius: 0; background: none; font-size: 13.5px; line-height: 1.35; color: var(--mute); }
+.prose .track li:hover { transform: none; background: none; }
+.prose .track li::before { left: 0; top: 0; z-index: 1; width: 16px; height: 16px; clip-path: none; border: 1.5px solid #fff; border-radius: 50%; background: var(--bg2); transition: background .35s ease; }
+.prose .track li::after { content: ""; position: absolute; left: 16px; right: 0; top: 7px; height: 2px; background: linear-gradient(#fff, #fff) left / 0% 100% no-repeat, var(--line2); transition: background-size .35s ease; }
+.prose .track li:last-child::after { display: none; }
+.checkpoints.in .track li::before, html:not(.js) .track li::before { background: #fff; }
+.checkpoints.in .track li::after, html:not(.js) .track li::after { background-size: 100% 100%, auto; }
+.checkpoints.in .track li:nth-child(1)::before { transition-delay: .3s; }
+.checkpoints.in .track li:nth-child(1)::after { transition-delay: .45s; }
+.checkpoints.in .track li:nth-child(2)::before { transition-delay: .8s; }
+.checkpoints.in .track li:nth-child(2)::after { transition-delay: .95s; }
+.checkpoints.in .track li:nth-child(3)::before { transition-delay: 1.3s; }
+.checkpoints.in .track li:nth-child(3)::after { transition-delay: 1.45s; }
+.checkpoints.in .track li:nth-child(4)::before { transition-delay: 1.8s; }
+.checkpoints.in .track li:nth-child(4)::after { transition-delay: 1.95s; }
+.checkpoints.in .track li:nth-child(5)::before { transition-delay: 2.3s; }
+
+/* "signs you're in the middle": tap to tick */
+.signs { margin: 0 0 1.3em; }
+.prose .signs ul { margin: 0 0 12px; gap: 10px; }
+.prose .signs li { padding: 0; }
+.prose .signs li:hover { transform: none; }
+.prose .signs li::before { left: 18px; top: 50%; width: 22px; height: 22px; margin-top: -11px; clip-path: none; border: 1.5px solid #fff; border-radius: 5px; background: transparent; transition: background .25s ease; }
+.prose .signs li::after { content: ""; position: absolute; left: 26px; top: 50%; width: 6px; height: 12px; margin-top: -8px; border: solid #000; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform .25s var(--ease); pointer-events: none; }
+.prose .signs li.on { border-color: #fff; background: var(--bg3); }
+.prose .signs li.on::before { background: #fff; }
+.prose .signs li.on::after { transform: rotate(45deg) scale(1); }
+.signs .sign { display: block; width: 100%; padding: 16px 18px 16px 58px; text-align: left; font-size: 17px; line-height: 1.5; color: inherit; cursor: pointer; }
+.prose .signs-result { margin: 0; font: clamp(20px, 2vw, 26px)/1.15 var(--display); letter-spacing: .01em; text-transform: uppercase; color: var(--dim); }
+.signs[data-state="middle"] .signs-result { color: #fff; }
+.signs-result.flash { animation: flash .6s var(--ease); }
+
 /* FAQ accordion */
 .faq { display: grid; gap: 10px; }
 .faq__item { border: 1px solid var(--line); border-radius: 8px; background: var(--bg2); transition: border-color .3s, background .3s; }
@@ -753,6 +800,11 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
   .prose .scoreboard li { padding-left: 54px; }
   .prose .scoreboard li::before { left: 16px; }
   .prose .scoreboard li::after { left: 25px; }
+  .stages { grid-template-columns: 1fr; }
+  .prose .track li { font-size: 12px; padding-right: 4px; }
+  .signs .sign { font-size: 16px; padding-left: 52px; }
+  .prose .signs li::before { left: 16px; }
+  .prose .signs li::after { left: 24px; }
   .next__float { display: none; }
   .totop { right: 12px; bottom: 12px; width: 46px; height: 46px; }
 }
