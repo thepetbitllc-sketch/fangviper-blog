@@ -9,7 +9,8 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const embedded = window.self !== window.top;
-  const POSTS = (window.FV_POSTS || []).slice().sort((a, b) => b.date.localeCompare(a.date)); // newest first
+  // newest first; posts sharing a date keep the order they were added (later = newer)
+  const POSTS = (window.FV_POSTS || []).map((p, i) => Object.assign(p, { _i: i })).sort((a, b) => b.date.localeCompare(a.date) || b._i - a._i);
   const bySlug = slug => POSTS.find(p => p.slug === slug);
 
   // On the public website every article has its own page (/<slug>/)
@@ -727,7 +728,29 @@
     $$("li", body).forEach((li, i) => { li.setAttribute("data-reveal", ""); li.style.setProperty("--d", (i % 5) * 0.07 + "s"); });
     // links to other posts are written as data-post="slug"; point them at the right address for this host
     $$("a[data-post]", body).forEach(a => a.setAttribute("href", postHref(a.dataset.post)));
-    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also", body).forEach((el, i) => {
+    // "two honest questions" check: gives back the article's own advice for the answers chosen
+    $$("[data-doubt]", body).forEach(box => {
+      const answers = {};
+      const result = $("[data-doubt-result]", box);
+      $$(".doubt-q", box).forEach((q, qi) => {
+        const btns = $$("button", q);
+        btns.forEach(b => {
+          b.setAttribute("aria-pressed", "false");
+          on(b, "click", () => {
+            answers[qi] = b.dataset.a;
+            btns.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+            const vals = Object.values(answers);
+            const yes = vals.includes("yes"), both = vals.length === 2;
+            result.textContent = yes ? "Keep going, and adjust as you learn."
+              : both ? "If that's been true for a long time, change the product or the approach. Keep everything you've learned."
+              : "Answer both, honestly.";
+            box.dataset.state = yes ? "go" : both ? "change" : "";
+            restart(result, "flash");
+          });
+        });
+      });
+    });
+    $$("h3, .drive-chart, .versus__card, .table-wrap, .faq__item, .cta-line, .see-also, .doubt-check", body).forEach((el, i) => {
       el.setAttribute("data-reveal", "");
       if (el.matches(".versus__card, .faq__item")) el.style.setProperty("--d", (i % 4) * 0.1 + "s");
     });
