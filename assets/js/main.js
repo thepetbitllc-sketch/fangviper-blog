@@ -7,7 +7,6 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const root = document.documentElement;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const embedded = window.self !== window.top;
   // newest first; posts sharing a date keep the order they were added (later = newer)
   const POSTS = (window.FV_POSTS || []).map((p, i) => Object.assign(p, { _i: i })).sort((a, b) => b.date.localeCompare(a.date) || b._i - a._i);
@@ -160,20 +159,6 @@
   }
 
   // ---------- effects ----------
-  function burst(x, y, color, n) {
-    if (reduced) return;
-    for (let i = 0; i < (n || 18); i++) {
-      const p = document.createElement("i");
-      p.className = "particle";
-      p.style.cssText = `left:${x}px;top:${y}px;background:${color || "#fff"}`;
-      document.body.appendChild(p);
-      const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 120, rot = Math.random() * 720 - 360;
-      p.animate([
-        { transform: "translate(-50%,-50%) rotate(0deg) scale(1)", opacity: 1 },
-        { transform: `translate(calc(-50% + ${f1(Math.cos(a) * d)}px), calc(-50% + ${f1(Math.sin(a) * d + 40)}px)) rotate(${f1(rot)}deg) scale(.4)`, opacity: 0 }
-      ], { duration: 700 + Math.random() * 500, easing: "cubic-bezier(.2,.8,.2,1)" }).onfinish = () => p.remove();
-    }
-  }
   function floatText(x, y, text, color) {
     if (reduced) return;
     const s = document.createElement("span");
@@ -599,15 +584,11 @@
       btn.parentElement.appendChild(s); setTimeout(() => s.remove(), 700);
       if (navigator.vibrate) navigator.vibrate(8);
       paint();
-      if (done >= ch.goal && was < ch.goal) {
-        const r = btn.getBoundingClientRect();
-        burst(r.left + r.width / 2, r.top + r.height / 2, "#000", 44);
-      }
       return true;
     }
     btn.addEventListener("click", e => {
       const r = btn.getBoundingClientRect();
-      if (add(1)) floatText(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2, "+1", "#000");
+      if (add(1)) floatText(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2, "+1", "#fff");
     });
     $$("[data-ch-add]").forEach(b => b.addEventListener("click", () => add(Number(b.dataset.chAdd))));
     $("[data-ch-reset]").addEventListener("click", () => { done = 0; paint(); });
@@ -647,8 +628,6 @@
       $("span", btn).textContent = "You're in";
       btn.disabled = true; input.disabled = true;
       msg.textContent = "Welcome to the pack.";
-      const r = btn.getBoundingClientRect();
-      burst(r.left + r.width / 2, r.top + r.height / 2, "#fff", 26);
     });
   }
 
@@ -719,7 +698,6 @@
       ${hasNext ? `<section class="next container">
         <p class="next__label"><i></i>Up next</p>
         <a class="next__link" href="${postHref(next.slug)}" data-next>${next.title}<small>${next.category} · ${next.minutes} min read</small></a>
-        <div class="next__float" data-next-float aria-hidden="true">${coverArt(next)}</div>
         ${more.length ? `<p class="next__more-title">More from the journal</p><div class="grid">${more.map(cardHTML).join("")}</div>` : ""}
       </section>` : ""}`;
 
@@ -837,7 +815,6 @@
       fangs++;
       const all = LS.get("fv_fangs", {}); all[p.slug] = fangs; LS.set("fv_fangs", all);
       fangN.textContent = `Fanged ${fangs}`;
-      burst(x, y, "#fff", 14);
       floatText(x, r.top, "+1", "#fff");
     }));
 
@@ -907,20 +884,6 @@
       observers.push(fio);
     } else onFinish();
 
-    // up-next hover preview that follows the cursor
-    const nl = $("[data-next]"), fl = $("[data-next-float]");
-    if (finePointer && !reduced && nl && fl) {
-      let tx = 0, ty = 0, cx = 0, cy = 0;
-      on(nl, "mouseenter", e => { cx = tx = e.clientX; cy = ty = e.clientY; fl.classList.add("show"); });
-      on(nl, "mouseleave", () => fl.classList.remove("show"));
-      on(window, "mousemove", e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
-      (function loop() {
-        if (!alive) return;
-        cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
-        fl.style.transform = `translate(${f1(cx)}px, ${f1(cy)}px) translate(-50%,-50%) rotate(${f1(clamp((tx - cx) * 0.05, -12, 12))}deg)`;
-        requestAnimationFrame(loop);
-      })();
-    }
 
     return () => {
       alive = false;
