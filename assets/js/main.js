@@ -438,6 +438,7 @@
     };
 
     if (!list.length) {
+      if (more) more.hidden = true;
       if (strip && adCard) { adCard.classList.add("card--wide"); strip.appendChild(adCard); strip.hidden = false; }
       $$("[data-cat-link]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); toJournal(); }));
       return { refresh() {} };
@@ -612,22 +613,29 @@
     setInterval(() => { if (vis && !document.hidden && Date.now() - last > 7000) { next(); last = Date.now(); } }, 1000);
   }
 
+  // Newsletter: the form posts to the store's standard Shopify newsletter list in a new tab.
   function initJoin() {
     const f = $("[data-join]");
     if (!f) return;
-    const input = $("input", f), msg = $("[data-join-msg]"), btn = $("button", f);
+    const input = $("input[type=email]", f), msg = $("[data-join-msg]", f), btn = $("button", f);
+    f.noValidate = true; // show our own message instead of the browser bubble
     f.addEventListener("submit", e => {
-      e.preventDefault();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) {
+        e.preventDefault();
         restart(f, "error");
         msg.textContent = "That email doesn't look right. Try again.";
         input.focus();
         return;
       }
-      f.classList.remove("error"); f.classList.add("ok");
-      $("span", btn).textContent = "You're in";
-      btn.disabled = true; input.disabled = true;
-      msg.textContent = "Welcome to the pack.";
+      if (HASH_MODE) { // the Claude preview can't send forms to another site
+        e.preventDefault();
+        msg.textContent = "Sign-up works on blog.fangviper.com.";
+        return;
+      }
+      f.classList.remove("error");
+      msg.textContent = "Sent. If the store asks you to confirm, finish it in the new tab.";
+      // disable only after the browser has taken the form data
+      setTimeout(() => { f.classList.add("ok"); $("span", btn).textContent = "Sent"; btn.disabled = true; input.disabled = true; }, 50);
     });
   }
 

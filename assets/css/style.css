@@ -232,6 +232,7 @@ html:not(.js) .line > span { transform: none; }
 .field input { width: 100%; min-width: 0; padding: 12px 0; border: 0; outline: 0; background: none; font: 400 16px/1 var(--body); }
 .field input::placeholder { color: var(--dim); }
 .field:focus-within { border-bottom-color: #fff; }
+.field__label { flex: none; margin-right: 14px; font: 500 11px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
 .join__form.error .field { animation: shake .4s; border-bottom-color: #fff; }
 @keyframes shake { 25%, 75% { transform: translateX(-6px); } 50% { transform: translateX(6px); } }
 .join__form.ok input { opacity: .4; }
