@@ -613,29 +613,53 @@
     setInterval(() => { if (vis && !document.hidden && Date.now() - last > 7000) { next(); last = Date.now(); } }, 1000);
   }
 
-  // Newsletter: the form posts to the store's standard Shopify newsletter list in a new tab.
+  // Newsletter: subscribes straight to the store's Klaviyo email list, the same list as the
+  // "Welcome to Fangviper" popup on fangviper.com. Uses Klaviyo's public browser API (site ID
+  // only, no secret key). If Klaviyo can't be reached, the form falls back to Shopify's newsletter.
+  const KLAVIYO = { site: "VayrbQ", list: "U9kkTw", source: "Fangviper blog" };
   function initJoin() {
     const f = $("[data-join]");
     if (!f) return;
-    const input = $("input[type=email]", f), msg = $("[data-join-msg]", f), btn = $("button", f);
+    const input = $("input[type=email]", f), msg = $("[data-join-msg]", f), btn = $("button", f), label = $("span", btn);
     f.noValidate = true; // show our own message instead of the browser bubble
-    f.addEventListener("submit", e => {
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) {
-        e.preventDefault();
-        restart(f, "error");
-        msg.textContent = "That email doesn't look right. Try again.";
-        input.focus();
-        return;
-      }
-      if (HASH_MODE) { // the Claude preview can't send forms to another site
-        e.preventDefault();
-        msg.textContent = "Sign-up works on blog.fangviper.com.";
-        return;
-      }
+    const invalid = () => {
+      restart(f, "error");
+      msg.textContent = "That email doesn't look right. Try again.";
+      input.focus();
+    };
+    f.addEventListener("submit", async e => {
+      e.preventDefault();
+      const email = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { invalid(); return; }
+      if (HASH_MODE) { msg.textContent = "Sign-up works on blog.fangviper.com."; return; }
       f.classList.remove("error");
-      msg.textContent = "Sent. If the store asks you to confirm, finish it in the new tab.";
-      // disable only after the browser has taken the form data
-      setTimeout(() => { f.classList.add("ok"); $("span", btn).textContent = "Sent"; btn.disabled = true; input.disabled = true; }, 50);
+      btn.disabled = true;
+      label.textContent = "Joining";
+      msg.textContent = "";
+      let res;
+      try {
+        res = await fetch(`https://a.klaviyo.com/client/subscriptions?company_id=${KLAVIYO.site}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/vnd.api+json", revision: "2024-10-15" },
+          body: JSON.stringify({ data: {
+            type: "subscription",
+            attributes: { custom_source: KLAVIYO.source, profile: { data: { type: "profile", attributes: { email } } } },
+            relationships: { list: { data: { type: "list", id: KLAVIYO.list } } }
+          } })
+        });
+      } catch (err) { res = null; }
+      if (res && res.ok) {
+        f.classList.add("ok");
+        input.disabled = true;
+        label.textContent = "You're in";
+        msg.textContent = "Welcome to the pack. If an email asks you to confirm, tap the link inside.";
+        return;
+      }
+      if (res && res.status === 400) { btn.disabled = false; label.textContent = "Join"; invalid(); return; }
+      // Klaviyo unreachable or down: hand the same email to the store's Shopify newsletter
+      msg.textContent = "Taking you to the store to finish signing up.";
+      f.target = "_self";
+      f.submit();
     });
   }
 

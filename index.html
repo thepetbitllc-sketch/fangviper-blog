@@ -195,7 +195,8 @@
     <section class="join page" id="join" aria-label="Newsletter">
       <h2 class="join__title" data-split>Join the pack.</h2>
       <p class="join__text">One email a week. Discipline, money, training and first access to new Fangviper drops. No spam.</p>
-      <!-- Real sign-up: Shopify's standard newsletter form. Each email becomes a customer
+      <!-- Sign-up: main.js sends the email to the Klaviyo list U9kkTw (same as the store popup).
+           Without scripts, or if Klaviyo is unreachable, this plain form posts to Shopify's newsletter, each email
            subscribed to email marketing in the store admin (tagged newsletter, blog). -->
       <form class="join__form" action="https://fangviper.com/contact#contact_form" method="post" accept-charset="UTF-8" target="_blank" data-join>
         <input type="hidden" name="form_type" value="customer">
