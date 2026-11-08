@@ -125,7 +125,7 @@
         <button class="ad-x" data-close aria-label="Close">${CLOSE}</button>
         <div class="ad-modal__media">
           ${ps.map((p, i) => `<img class="${i === 0 ? "on" : ""}" src="${img(p, 800)}" alt="${p.name}">`).join("")}
-          <div class="ad-modal__logo"><img src="assets/img/logo-white.png" alt=""></div>
+          <div class="ad-modal__logo"><img src="assets/img/logo-black.png" alt=""></div>
         </div>
         <div class="ad-modal__body">
           <span class="ad-tag">From the FangViper store</span>

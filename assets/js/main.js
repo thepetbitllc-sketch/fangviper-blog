@@ -88,10 +88,10 @@
       case "horizon": {
         let y = 196, gap = 3, lines = "", stripes = "";
         while (y < 300) { lines += `<line x1="0" x2="400" y1="${f1(y)}" y2="${f1(y)}"/>`; y += gap; gap *= 1.28; }
-        for (let k = 0; k < 6; k++) stripes += `<rect x="100" y="${f1(150 + k * 9 + k * k * 1.2)}" width="200" height="${f1(1.5 + k * 0.9)}" fill="#0b0b0b"/>`;
+        for (let k = 0; k < 6; k++) stripes += `<rect x="100" y="${f1(150 + k * 9 + k * k * 1.2)}" width="200" height="${f1(1.5 + k * 0.9)}" fill="#f6f5f3"/>`;
         const cid = "hz-" + id + "-" + Math.floor(r() * 1e6);
         return svgWrap(`<defs><clipPath id="${cid}"><rect x="0" y="0" width="400" height="196"/></clipPath></defs>
-          <g class="pat pat--horizon"><g clip-path="url(#${cid})"><g class="sun"><circle cx="200" cy="196" r="88" fill="#fff" fill-opacity=".92"/>${stripes}</g></g>${lines}</g>`, "xMidYMax slice");
+          <g class="pat pat--horizon"><g clip-path="url(#${cid})"><g class="sun"><circle cx="200" cy="196" r="88" fill="#19110b" fill-opacity=".9"/>${stripes}</g></g>${lines}</g>`, "xMidYMax slice");
       }
       case "halftone": {
         for (let y = 0; y < 15; y++) for (let x = 0; x < 20; x++) {
@@ -132,7 +132,7 @@
       }
       case "ripple": {
         for (let i = 0; i < 5; i++) g += `<circle cx="200" cy="150" r="190" stroke-width="1.4" style="--i:${i}"/>`;
-        return svgWrap(`<g class="pat pat--ripple">${g}</g><circle cx="200" cy="150" r="5" fill="#fff"/>`);
+        return svgWrap(`<g class="pat pat--ripple">${g}</g><circle cx="200" cy="150" r="5" fill="#19110b"/>`);
       }
       default: return svgWrap("");
     }
@@ -589,7 +589,7 @@
     }
     btn.addEventListener("click", e => {
       const r = btn.getBoundingClientRect();
-      if (add(1)) floatText(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2, "+1", "#fff");
+      if (add(1)) floatText(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2, "+1", "#19110b");
     });
     $$("[data-ch-add]").forEach(b => b.addEventListener("click", () => add(Number(b.dataset.chAdd))));
     $("[data-ch-reset]").addEventListener("click", () => { done = 0; paint(); });
@@ -843,11 +843,11 @@
     const fangN = $("[data-fang-n]");
     $$("[data-fang]", main).forEach(b => on(b, "click", () => {
       const r = b.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
-      if (fangs >= 50) { floatText(x, r.top, "Max fangs", "#fff"); return; }
+      if (fangs >= 50) { floatText(x, r.top, "Max fangs", "#19110b"); return; }
       fangs++;
       const all = LS.get("fv_fangs", {}); all[p.slug] = fangs; LS.set("fv_fangs", all);
       fangN.textContent = `Fanged ${fangs}`;
-      floatText(x, r.top, "+1", "#fff");
+      floatText(x, r.top, "+1", "#19110b");
     }));
 
     // progress and quote lighting
