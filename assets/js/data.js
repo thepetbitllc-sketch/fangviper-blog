@@ -9,7 +9,7 @@
      category    one of FV_CATEGORIES below
      cover       type "photo" (src + alt) or type "pattern" (bars, horizon, halftone,
                  waves, grid, contour, ripple); word = big outlined word on the cover
-     adMatch     product id from ads.js to feature inside the article
+     adMatch     store handle of the product to feature inside the article (see products.js)
      body        article HTML: <h2> sections, <h3> steps, <ul>, <blockquote>, <mark>,
                  table.compare, div.versus, figure.drive-chart, div.faq with <details>
    ========================================================== */
@@ -23,7 +23,7 @@ window.FV_POSTS = [
     excerpt: "Motivation gets you started, but it never lasts. Learn why discipline beats motivation and how to build it, whether you're growing a business, training, or chasing any goal.",
     keywords: ["discipline vs motivation", "how to stay disciplined", "motivation fades", "how to keep going", "self discipline tips"],
     cover: { type: "photo", src: "assets/img/run-solo.jpg", alt: "discipline vs motivation", word: "ENGINE" },
-    adMatch: "mug",
+    adMatch: "discipline-over-mood",
     body: `
 <p>Everyone has felt it. You watch a video, hear a story, or hit a breaking point, and suddenly you're ready. Tomorrow you start the business. You finish the house. You run every morning. You study every night.</p>
 <p>Then three days pass, and the fire is gone.</p>
@@ -119,7 +119,7 @@ window.FV_POSTS = [
 <p>You'll never feel motivated every day, and nobody does. The people who finish houses, build businesses, set personal records, and change their lives aren't more motivated than you. They just stopped relying on motivation.</p>
 <blockquote>Start when you feel it. Keep going when you don't.</blockquote>
 <p class="see-also">Feel like quitting right now? Read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a>. Building a business from nothing? Read <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>. Great at starting but struggle to finish? Read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
-<p class="cta-line">Want a daily reminder? <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, with t-shirts, cups, and bags made for people who keep going when the motivation runs out.</p>
+<p class="cta-line">Want a daily reminder? <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, with t-shirts, cups, and bags made for people who keep going when the motivation runs out.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -151,7 +151,7 @@ window.FV_POSTS = [
     excerpt: "Feel like quitting? Learn how to keep going when progress is slow, support is missing, and no one is watching, whether you're building a business, a home, or yourself.",
     keywords: ["how to stay motivated when you feel like giving up", "what to do when you feel like giving up", "how to keep going", "keep going when no one believes in you", "self motivation"],
     cover: { type: "photo", src: "assets/img/posts/alone-at-night.jpg", alt: "how to stay motivated when you feel like giving up", word: "WITNESS" },
-    adMatch: "journal",
+    adMatch: "keep-climbing",
     body: `
 <p>There's a moment every person chasing something hard eventually meets. It usually comes late at night, or early in the morning, when nobody else is awake. You look at how far you still have to go, and a quiet voice says: "Why am I even doing this?"</p>
 <p>Nobody sees that moment. Nobody posts it. But it decides more about your future than any big day ever will.</p>
@@ -226,7 +226,7 @@ window.FV_POSTS = [
 <blockquote>You can't see how close you are from where you're standing. That's exactly why you keep going.</blockquote>
 <p>If you're reading this in the middle of that quiet, tired moment, <mark>don't make a permanent decision tonight.</mark> Sleep, get up, and do one small thing tomorrow. Then do it again.</p>
 <p class="see-also">If motivation is fading, start with the foundation. Read <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation: Why Motivation Fades and What Actually Keeps You Going</a>. Building a business with no money? Read <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>. Losing steam halfway? Read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>. Training hard but not seeing results? Read <a class="text-cta" data-post="how-to-stay-motivated-to-run" href="how-to-stay-motivated-to-run/">How to Stay Motivated to Run When Results Are Slow</a>.</p>
-<p class="cta-line">And for a daily reminder of why you started, <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">explore the FangViper collection</a>, made for people who keep going when no one is watching.</p>
+<p class="cta-line">And for a daily reminder of why you started, <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">explore the FangViper collection</a>, made for people who keep going when no one is watching.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -334,7 +334,7 @@ window.FV_POSTS = [
 </div>
 <p>If the answer to either is yes, keep going and adjust as you learn. If both answers are no for a long time, change the product or the approach, but don't throw away everything you've learned. <mark>That knowledge is the foundation of whatever you build next.</mark></p>
 <p class="see-also">Struggling with the mental side of it? Read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a> and <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation: Why Motivation Fades and What Actually Keeps You Going</a>. And when the middle gets long, read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
-<p class="cta-line">Building from nothing? Keep your reminder close. <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who build without waiting for permission.</p>
+<p class="cta-line">Building from nothing? Keep your reminder close. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who build without waiting for permission.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -366,7 +366,7 @@ window.FV_POSTS = [
     excerpt: "Great at starting but struggle to finish? Learn why most goals die in the middle and how to push through to the end, from building a house to growing a business.",
     keywords: ["how to finish what you start", "why do I never finish what I start", "stop quitting halfway", "how to follow through on goals", "the messy middle", "finishing projects"],
     cover: { type: "photo", src: "assets/img/posts/half-built.jpg", alt: "how to finish what you start", word: "FINISH" },
-    adMatch: "journal",
+    adMatch: "keep-climbing",
     body: `
 <p>Starting is the easy part. Everyone loves a fresh start: the new plan, the new notebook, the first day of a goal when everything feels possible.</p>
 <p>Finishing is different. Finishing is rare.</p>
@@ -461,7 +461,7 @@ window.FV_POSTS = [
 <blockquote>The people who finish aren't the ones who never felt like quitting. They're the ones who kept taking the next step anyway.</blockquote>
 <p><mark>Finish this one. Then go start the next.</mark></p>
 <p class="see-also">Keep going with the rest of the series: <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation</a>, <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a>, and <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>.</p>
-<p class="cta-line">For the long middle of your journey, keep a reminder close. <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who finish what they start.</p>
+<p class="cta-line">For the long middle of your journey, keep a reminder close. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who finish what they start.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -493,7 +493,7 @@ window.FV_POSTS = [
     excerpt: "Training hard but not seeing results? Learn why progress feels slow, what's really happening beneath the surface, and how to stay motivated to run and train when the numbers won't move.",
     keywords: ["how to stay motivated to run", "running motivation", "no progress running", "training plateau", "fitness plateau motivation", "why am I not getting faster"],
     cover: { type: "photo", src: "assets/img/posts/training-log.jpg", alt: "how to stay motivated to run when results are slow", word: "PACE" },
-    adMatch: "hydrate",
+    adMatch: "hydrate-then-dominate",
     body: `
 <p>You've been showing up. Early mornings, sore legs, runs in the cold and the heat. And yet your pace barely moves. The stopwatch doesn't care how hard you've worked, and neither does the mirror.</p>
 <p>That's one of the hardest parts of training for anything, whether it's running, lifting, a sport, or any skill that takes time. Effort is immediate. Results are slow.</p>
@@ -570,7 +570,7 @@ window.FV_POSTS = [
 <p>When people watch a race, they see the finish, the medal, the fast time. They don't see the thousands of ordinary runs behind it, the early mornings, the plateaus, the attempts that fell short.</p>
 <blockquote>Your slow weeks are part of the story. Keep heating the water. It boils eventually.</blockquote>
 <p class="see-also">If you're struggling to keep going, read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a> and <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
-<p class="cta-line">Carry the reminder on every run and every session. <a class="text-cta" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who keep showing up.</p>
+<p class="cta-line">Carry the reminder on every run and every session. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who keep showing up.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">

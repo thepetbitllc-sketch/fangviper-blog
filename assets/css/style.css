@@ -281,29 +281,25 @@ html:not(.js) .line > span { transform: none; }
 .ad-toast.hold .ad-toast__timer { animation-play-state: paused; }
 @keyframes timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
-.ad-modal { position: fixed; inset: 0; z-index: 8000; display: grid; place-items: center; padding: 16px; visibility: hidden; }
-.ad-modal.in { visibility: visible; }
-.ad-modal__backdrop { position: absolute; inset: 0; background: rgba(25, 17, 11, .45); opacity: 0; transition: opacity .4s; }
-.ad-modal.in .ad-modal__backdrop { opacity: 1; }
-.ad-modal__card { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: min(860px, 100%); max-height: calc(100svh - 32px); overflow: auto; background: var(--bg); border: 1px solid var(--hair2); opacity: 0; transform: translateY(16px); transition: opacity .45s var(--ease), transform .45s var(--ease); }
-.ad-modal.in .ad-modal__card { opacity: 1; transform: none; }
-.ad-modal__card .ad-x { top: 10px; right: 10px; background: var(--bg); border-radius: 50%; }
-.ad-modal__media { position: relative; min-height: 420px; overflow: hidden; background: var(--fg); }
-.ad-modal__media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .8s; }
-.ad-modal__media > img.on { opacity: 1; }
-.ad-modal__logo { position: absolute; left: 16px; bottom: 16px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--bg); }
-.ad-modal__logo img { width: 22px; }
-.ad-modal__body { display: flex; flex-direction: column; gap: 16px; padding: 40px 32px 28px; }
-.ad-modal__title { font-size: clamp(24.8px, 2.7vw, 34.7px); line-height: 1.15; }
-.ad-modal__title span { display: block; }
-.ad-modal__title span:last-child { color: var(--mute); }
-.ad-modal__body > p { color: var(--mute); }
-.ad-modal__list { list-style: none; border-top: 1px solid var(--hair); }
-.ad-modal__list a { display: flex; justify-content: space-between; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--hair); color: var(--mute); transition: color .2s; }
-.ad-modal__list li.on a, .ad-modal__list a:hover { color: var(--fg); }
-.ad-modal__list b { font-weight: 500; }
-.ad-modal__skip { align-self: center; padding: 6px; font: 500 10.5px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
-.ad-modal__skip:hover { color: var(--fg); }
+/* newsletter sign-up card (signup.js): sits in the corner, never covers the page */
+.fv-invite { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 720; width: 360px; max-width: calc(100vw - 32px); padding: 26px 24px 18px; background: var(--bg); border: 1px solid var(--hair); box-shadow: 0 18px 50px rgba(25, 17, 11, .12); opacity: 0; transform: translateY(16px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.fv-invite.in { opacity: 1; transform: none; }
+.fv-invite__x { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 32px; height: 32px; color: var(--mute); transition: color .2s; }
+.fv-invite__x:hover { color: var(--fg); }
+.fv-invite__title { margin-top: 8px; font-size: 24px; }
+.fv-invite__perks { list-style: none; margin-top: 14px; border-top: 1px solid var(--hair); }
+.fv-invite__perks li { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--hair); font-size: 13px; color: var(--text); }
+.fv-invite__perks li::before { content: "\2014"; color: var(--dim); }
+.fv-invite__form { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 16px; }
+.fv-invite__form .field { flex: 1 1 160px; }
+.fv-invite__form .field input { font-size: 15px; }
+.fv-invite .btn { background: var(--fg); color: var(--bg); }
+.fv-invite .btn:hover { background: var(--bg); color: var(--fg); }
+.fv-invite .btn:disabled { opacity: .7; cursor: default; }
+.fv-invite__msg { flex-basis: 100%; font-size: 11.5px; line-height: 1.5; color: var(--mute); }
+.fv-invite__form.error .field { animation: shake .4s; border-bottom-color: var(--fg); }
+.fv-invite__form.ok input { opacity: .4; }
+
 
 .ad-inline { margin: 2.6em 0; padding: 26px 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
 .ad-inline a { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 24px; }
@@ -562,6 +558,7 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
 /* nudge when a reader stops mid-article */
 .nudge { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 650; display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1px solid var(--hair2); border-radius: 100px; background: var(--bg); font: 500 11px var(--body); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; cursor: pointer; opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 12px); transition: opacity .4s, transform .4s var(--ease), visibility .4s; }
 .nudge.show { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); }
+body:has(.fv-invite.in) .nudge { opacity: 0; visibility: hidden; pointer-events: none; }
 .nudge svg { width: 13px; height: 13px; }
 
 /* ==========================================================
@@ -580,8 +577,6 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
   .challenge__grid { grid-template-columns: 1fr; }
   .footer__top { grid-template-columns: 1fr 1fr 1fr; }
   .footer__logo { grid-column: 1 / -1; }
-  .ad-modal__card { grid-template-columns: 1fr; }
-  .ad-modal__media { min-height: 220px; }
   /* article progress rail becomes a small floating pill */
   .a-layout { grid-template-columns: minmax(0, 1fr); padding-top: 44px; }
   .a-rail { position: fixed; top: auto; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 640; flex-direction: row; align-items: center; gap: 12px; padding: 5px 16px 5px 5px; border: 1px solid var(--hair2); border-radius: 100px; background: var(--bg); }
@@ -591,6 +586,7 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
   .a-rail__val { margin: 0; font-size: 16px; }
   .nudge { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
   .ad-toast { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+  .fv-invite { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (min-width: 701px) { .grid .card--span2 { grid-column: span 2; } }
 @media (max-width: 700px) {
@@ -606,7 +602,8 @@ html:not(.js) .drive-chart .marker, html:not(.js) .drive-chart .marker-label, ht
   .search { min-width: 0; }
   .footer__top { grid-template-columns: 1fr 1fr; }
   .ad-toast { left: 12px; right: 12px; width: auto; }
-  .ad-modal__body { padding: 30px 22px 22px; }
+  .fv-invite { left: 12px; right: 12px; width: auto; max-width: none; padding: 22px 18px 14px; }
+  .fv-invite__perks li { padding: 7px 0; font-size: 12.5px; }
   .ad-inline a { grid-template-columns: 96px 1fr; gap: 16px; }
   .ad-inline__body strong { font-size: 20px; }
   .a-cover { aspect-ratio: 4 / 3; }

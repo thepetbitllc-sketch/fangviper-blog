@@ -1,29 +1,23 @@
 /* ==========================================================
    FANG VIPER — self-promo ad engine
    Every ad points to the store (fangviper.com), not this blog.
-   Edit STORE / PRODUCTS below to change what gets promoted.
+   Products come from assets/js/products.js (refresh it with
+   `node --use-system-ca tools/sync-products.js`).
+   Ads sit inside the page (story grid, articles, sidebar) plus a
+   small corner card; nothing covers the whole screen. Newsletter
+   subscribers (signup.js) don't get the corner card at all.
    ========================================================== */
 (function () {
   const STORE = "https://fangviper.com";
-  const IMG = "assets/img/products/";
 
-  // id is referenced by posts' `adMatch` in data.js
-  // Photos are local copies of the store's product images (600px).
-  const PRODUCTS = [
-    { id: "nobody",  name: "Nobody Is Coming Tee",        price: "$39.99", handle: "nobody-is-coming",       kicker: "Wear the reminder",      img: IMG + "nobody.jpg" },
-    { id: "outwork", name: "Outwork Tee",                 price: "$39.99", handle: "outwork",                kicker: "Built for the grind",    img: IMG + "outwork.jpg" },
-    { id: "made",    name: "Made Not Born Tee",           price: "$39.99", handle: "made-not-born",          kicker: "Earned, not given",      img: IMG + "made.jpg" },
-    { id: "bag",     name: "Iron Blueprint Gym Bag",      price: "$74.99", handle: "iron-blueprint-1",       kicker: "New drop",               img: IMG + "bag.jpg" },
-    { id: "bottle",  name: "Fang Viper Bottle",           price: "$49.99", handle: "fang-viper-bottle",      kicker: "Stay cold. Stay sharp",  img: IMG + "bottle.jpg" },
-    { id: "hydrate", name: "Hydrate Then Dominate Bottle",price: "$49.99", handle: "hydrate-then-dominate",  kicker: "Fuel the session",       img: IMG + "hydrate.jpg" },
-    { id: "mug",     name: "Discipline Over Mood Mug",    price: "$29.99", handle: "discipline-over-mood",   kicker: "Morning ritual",         img: IMG + "mug.jpg" },
-    { id: "journal", name: "Keep Climbing Journal",       price: "$44.99", handle: "keep-climbing",          kicker: "Log the work",           img: IMG + "journal.jpg" }
-  ];
+  // id = the store handle; posts' `adMatch` in data.js names one
+  const PRODUCTS = (window.FV_PRODUCTS || []).filter(p => p.img);
 
   const ANNOUNCEMENTS = [
-    "New drop — Iron Blueprint gym bag is live at FangViper.com",
-    "Train in the words you live by — shop the tee collection",
-    "Hydrate then dominate — insulated bottles now in stock"
+    { text: "The One Life collection — tees, mugs and journals", path: "/collections/one-life" },
+    { text: "Pack & Go — gym bags built to carry the work", path: "/collections/pack-go" },
+    { text: "Hydrate then dominate — insulated bottles", path: "/collections/hydration" },
+    { text: "Train in the words you live by — shop the tees", path: "/collections/tees-polos" }
   ];
 
   // --- helpers -------------------------------------------------
@@ -31,22 +25,26 @@
     get(k, s) { try { return (s ? sessionStorage : localStorage).getItem(k); } catch (e) { return null; } },
     set(k, v, s) { try { (s ? sessionStorage : localStorage).setItem(k, v); } catch (e) {} }
   };
-  const link = (p, placement) =>
-    `${STORE}${p ? "/products/" + p.handle : "/collections/all"}?utm_source=fangviper_blog&utm_medium=${placement}&utm_campaign=blog_ads`;
+  const tag = placement => `utm_source=fangviper_blog&utm_medium=${placement}&utm_campaign=blog_ads`;
+  const link = (p, placement, path) => `${STORE}${p ? "/products/" + p.id : path || "/collections"}?${tag(placement)}`;
   const storeUrl = (placement, q) =>
-    `${STORE}${q ? "/search?type=product&q=" + encodeURIComponent(q) + "&" : "/collections/all?"}utm_source=fangviper_blog&utm_medium=${placement}&utm_campaign=blog_ads`;
-  const img = p => p.img;
+    `${STORE}${q ? "/search?type=product&q=" + encodeURIComponent(q) + "&" : "/collections?"}${tag(placement)}`;
+  // Shopify's CDN resizes on the fly
+  const img = (p, w) => p.img + (p.img.includes("?") ? "&" : "?") + "width=" + w;
   const byId = id => PRODUCTS.find(p => p.id === id);
+  // A mix: one product per category first (tee, mug, bottle, bag, journal), then any.
   const pick = (n, exclude) => {
     const pool = PRODUCTS.filter(p => p.id !== exclude).sort(() => Math.random() - 0.5);
-    return pool.slice(0, n);
+    const out = [], cats = new Set();
+    for (const p of pool) if (out.length < n && !cats.has(p.cat)) { out.push(p); cats.add(p.cat); }
+    for (const p of pool) if (out.length < n && !out.includes(p)) out.push(p);
+    return out;
   };
+  const isMember = () => !!(window.FV_SIGNUP && window.FV_SIGNUP.isMember());
   const ARROW = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
   const CLOSE = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 
-  let modalOpen = false;
   let lastPop = 0;
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // --- 1. Announcement bar (rotating) --------------------------
   function announcement() {
@@ -58,7 +56,8 @@
     const show = () => {
       txt.classList.remove("in");
       setTimeout(() => {
-        txt.innerHTML = `<a href="${link(null, "announcement")}" target="_blank" rel="noopener">${ANNOUNCEMENTS[i]} <span class="announce__arrow">${ARROW}</span></a>`;
+        const a = ANNOUNCEMENTS[i];
+        txt.innerHTML = `<a href="${link(null, "announcement", a.path)}" target="_blank" rel="noopener">${a.text} <span class="announce__arrow">${ARROW}</span></a>`;
         txt.classList.add("in");
         i = (i + 1) % ANNOUNCEMENTS.length;
       }, 350);
@@ -72,10 +71,11 @@
     });
   }
 
-  // --- 2. Slide-in toast ---------------------------------------
+  // --- 2. Corner card (the only ad that pops up; small, never for subscribers) ---
   let toastCount = 0;
   function toast(product, placement) {
-    if (modalOpen || toastCount >= 2 || document.querySelector(".ad-toast")) return;
+    if (!PRODUCTS.length || isMember() || toastCount >= 2) return;
+    if (document.querySelector(".ad-toast, .fv-invite")) return;
     if (Date.now() - lastPop < 25000) return;
     if (Number(store.get("fv_toast_snooze", true) || 0) > Date.now()) return;
     const p = product || pick(1)[0];
@@ -107,69 +107,9 @@
     el.addEventListener("mouseleave", () => { el.classList.remove("hold"); t = setTimeout(() => kill(false), 4000); });
   }
 
-  // --- 3. Modal pop-up (once per session) ----------------------
-  function modal(trigger) {
-    if (modalOpen || store.get("fv_modal_seen", true)) return;
-    if (Number(store.get("fv_modal_snooze") || 0) > Date.now()) return;
-    modalOpen = true; lastPop = Date.now();
-    store.set("fv_modal_seen", "1", true);
-    const ps = pick(3);
-    const wrap = document.createElement("div");
-    wrap.className = "ad-modal";
-    wrap.setAttribute("role", "dialog");
-    wrap.setAttribute("aria-modal", "true");
-    wrap.setAttribute("aria-label", "FangViper store");
-    wrap.innerHTML = `
-      <div class="ad-modal__backdrop" data-close></div>
-      <div class="ad-modal__card">
-        <button class="ad-x" data-close aria-label="Close">${CLOSE}</button>
-        <div class="ad-modal__media">
-          ${ps.map((p, i) => `<img class="${i === 0 ? "on" : ""}" src="${img(p, 800)}" alt="${p.name}">`).join("")}
-          <div class="ad-modal__logo"><img src="assets/img/logo-black.png" alt=""></div>
-        </div>
-        <div class="ad-modal__body">
-          <span class="ad-tag">From the FangViper store</span>
-          <h3 class="ad-modal__title"><span>You read like</span><span>you train.</span></h3>
-          <p>Gear built for people who show up when nobody's watching. Tees, bottles, bags and journals — all black &amp; white, all attitude.</p>
-          <ul class="ad-modal__list">
-            ${ps.map((p, i) => `<li class="${i === 0 ? "on" : ""}"><a href="${link(p, "modal_" + trigger)}" target="_blank" rel="noopener"><span>${p.name}</span><b>${p.price}</b></a></li>`).join("")}
-          </ul>
-          <a class="btn btn--light btn--block" href="${link(null, "modal_" + trigger)}" target="_blank" rel="noopener">Shop FangViper.com ${ARROW}</a>
-          <button class="ad-modal__skip" data-close>No thanks, keep reading</button>
-        </div>
-      </div>`;
-    document.body.appendChild(wrap);
-    document.documentElement.classList.add("no-scroll");
-    requestAnimationFrame(() => wrap.classList.add("in"));
-    // cycle products
-    let k = 0;
-    const imgs = wrap.querySelectorAll(".ad-modal__media > img");
-    const lis = wrap.querySelectorAll(".ad-modal__list li");
-    const cyc = setInterval(() => {
-      imgs[k].classList.remove("on"); lis[k].classList.remove("on");
-      k = (k + 1) % imgs.length;
-      imgs[k].classList.add("on"); lis[k].classList.add("on");
-    }, 2600);
-    lis.forEach((li, i) => li.addEventListener("mouseenter", () => {
-      imgs[k].classList.remove("on"); lis[k].classList.remove("on");
-      k = i; imgs[k].classList.add("on"); lis[k].classList.add("on");
-    }));
-    const close = () => {
-      clearInterval(cyc);
-      wrap.classList.remove("in");
-      document.documentElement.classList.remove("no-scroll");
-      store.set("fv_modal_snooze", String(Date.now() + 1000 * 60 * 60 * 12));
-      setTimeout(() => { wrap.remove(); modalOpen = false; }, 500);
-      document.removeEventListener("keydown", esc);
-    };
-    const esc = e => { if (e.key === "Escape") close(); };
-    document.addEventListener("keydown", esc);
-    wrap.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", close));
-    wrap.querySelector(".btn").focus({ preventScroll: true });
-  }
-
-  // --- 4. In-feed native card (home grid) ----------------------
+  // --- 3. In-feed native card (home grid) ----------------------
   function feedCard() {
+    if (!PRODUCTS.length) return null;
     const ps = pick(3);
     const el = document.createElement("a");
     el.className = "card card--ad";
@@ -195,9 +135,10 @@
     return el;
   }
 
-  // --- 5. Inline article ad ------------------------------------
+  // --- 4. Inline article ad ------------------------------------
   function inlineAd(matchId) {
     const p = byId(matchId) || pick(1)[0];
+    if (!p) return null;
     const el = document.createElement("aside");
     el.className = "ad-inline";
     el.setAttribute("data-reveal", "");
@@ -214,9 +155,9 @@
     return el;
   }
 
-  // --- 6. Sticky rail ad (article, desktop) --------------------
+  // --- 5. Sticky rail ad (article, desktop) --------------------
   function railAd(mount) {
-    if (!mount) return;
+    if (!mount || !PRODUCTS.length) return;
     const ps = pick(4);
     mount.innerHTML = `
       <a class="ad-rail" href="${link(null, "article_rail")}" target="_blank" rel="noopener">
@@ -252,16 +193,8 @@
   }, { passive: true });
   const scrollDepth = (pct, fn) => triggers.push({ pct, fn });
 
-  function exitIntent(fn) {
-    if (matchMedia("(pointer: coarse)").matches) return;
-    document.addEventListener("mouseout", e => {
-      if (!e.relatedTarget && e.clientY <= 0) fn();
-    });
-  }
-
   function boot() {
     announcement();
-    exitIntent(() => modal("exit"));
   }
 
   function view(page, ctx) {
@@ -269,14 +202,12 @@
     clearTimeout(homeTimer);
     if (page === "home") {
       homeTimer = setTimeout(() => toast(null, "toast_timed"), 14000);
-      scrollDepth(0.45, () => modal("scroll"));
       scrollDepth(0.8, () => toast(null, "toast_scroll"));
     }
     if (page === "article") {
       scrollDepth(0.3, () => toast(byId(ctx && ctx.adMatch), "toast_article"));
-      scrollDepth(0.62, () => modal("article_scroll"));
     }
   }
 
-  window.FV_ADS = { boot, view, toast, modal, feedCard, inlineAd, railAd, link, storeUrl, pick, img, PRODUCTS };
+  window.FV_ADS = { boot, view, toast, feedCard, inlineAd, railAd, link, storeUrl, pick, img, PRODUCTS };
 })();

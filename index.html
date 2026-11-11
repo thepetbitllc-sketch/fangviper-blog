@@ -19,6 +19,7 @@
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.shopify.com">
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <script>document.documentElement.classList.add("js");</script>
@@ -38,7 +39,7 @@
       <a class="header__logo" href="https://fangviper.com/" aria-label="Fangviper home">Fangviper</a>
       <nav class="header__nav" aria-label="Main">
         <a href="https://fangviper.com/">Home</a>
-        <a data-store data-medium="header" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=header&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop</a>
+        <a data-store data-medium="header" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=header&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop</a>
         <a href="index.html" aria-current="page">Blog</a>
         <a href="https://fangviper.com/pages/contact">Contact</a>
         <a href="https://fangviper.com/pages/about-us">About Us</a>
@@ -46,7 +47,7 @@
       </nav>
       <div class="header__end">
         <a href="index.html">Blog</a>
-        <a data-store data-medium="header" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=header&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop</a>
+        <a data-store data-medium="header" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=header&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop</a>
       </div>
     </header>
   </div>
@@ -63,7 +64,7 @@
         <p class="hero__sub">Mindset, money and training for people who keep going when the motivation runs out.</p>
         <div class="hero__cta">
           <a class="btn" href="#journal">Read the journal</a>
-          <a class="btn btn--quiet" data-store data-medium="hero" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=hero&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop the collection</a>
+          <a class="btn btn--quiet" data-store data-medium="hero" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=hero&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop the collection</a>
         </div>
         <a class="resume" data-resume hidden href="#journal"></a>
       </div>
@@ -155,7 +156,7 @@
           <div class="challenge__reward" data-ch-reward hidden>
             <p class="challenge__done">Challenge crushed.</p>
             <p>You earned it. Gear that matches the work is waiting.</p>
-            <a class="btn" data-store data-medium="challenge_reward" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=challenge_reward&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Claim your reward look</a>
+            <a class="btn" data-store data-medium="challenge_reward" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=challenge_reward&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Claim your reward look</a>
           </div>
         </div>
         <div class="challenge__ring">
@@ -178,7 +179,7 @@
       <p class="label">From the Fangviper store</p>
       <h2 class="shopnote__title">Wear the reminder.</h2>
       <p class="shopnote__text">Tees, bottles, bags and journals for people who keep going.</p>
-      <a class="btn" data-store data-medium="shop_note" href="https://fangviper.com/collections/all?utm_source=fangviper_blog&amp;utm_medium=shop_note&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop the collection</a>
+      <a class="btn" data-store data-medium="shop_note" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=shop_note&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Shop the collection</a>
     </section>
 
     <!-- DAILY FUEL -->
@@ -194,8 +195,8 @@
     <!-- JOIN -->
     <section class="join page" id="join" aria-label="Newsletter">
       <h2 class="join__title" data-split>Join the pack.</h2>
-      <p class="join__text">One email a week. Discipline, money, training and first access to new Fangviper drops. No spam.</p>
-      <!-- Sign-up: main.js sends the email to the Klaviyo list U9kkTw (same as the store popup).
+      <p class="join__text">New posts by email, first access to new FangViper drops, and no more pop-up ads while you read. No spam.</p>
+      <!-- Sign-up: signup.js sends the email to Klaviyo (lists Blog Newsletter XkRtWc + Email List U9kkTw).
            Without scripts, or if Klaviyo is unreachable, this plain form posts to Shopify's newsletter, each email
            subscribed to email marketing in the store admin (tagged newsletter, blog). -->
       <form class="join__form" action="https://fangviper.com/contact#contact_form" method="post" accept-charset="UTF-8" target="_blank" data-join>
@@ -253,7 +254,9 @@
   </button>
 
   <script src="assets/js/data.js"></script>
+  <script src="assets/js/products.js"></script>
   <script src="assets/js/ads.js"></script>
+  <script src="assets/js/signup.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

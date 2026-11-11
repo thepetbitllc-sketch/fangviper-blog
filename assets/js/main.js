@@ -613,10 +613,10 @@
     setInterval(() => { if (vis && !document.hidden && Date.now() - last > 7000) { next(); last = Date.now(); } }, 1000);
   }
 
-  // Newsletter: subscribes straight to the store's Klaviyo email list, the same list as the
-  // "Welcome to Fangviper" popup on fangviper.com. Uses Klaviyo's public browser API (site ID
-  // only, no secret key). If Klaviyo can't be reached, the form falls back to Shopify's newsletter.
-  const KLAVIYO = { site: "VayrbQ", list: "U9kkTw", source: "Fangviper blog" };
+  // Newsletter: signup.js subscribes the email in Klaviyo (Blog Newsletter + the store's Email
+  // List) and switches pop-up ads off for this reader. If Klaviyo can't be reached, the form
+  // falls back to Shopify's newsletter.
+  const SIGNUP = window.FV_SIGNUP;
   function initJoin() {
     const f = $("[data-join]");
     if (!f) return;
@@ -636,26 +636,15 @@
       btn.disabled = true;
       label.textContent = "Joining";
       msg.textContent = "";
-      let res;
-      try {
-        res = await fetch(`https://a.klaviyo.com/client/subscriptions?company_id=${KLAVIYO.site}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/vnd.api+json", revision: "2024-10-15" },
-          body: JSON.stringify({ data: {
-            type: "subscription",
-            attributes: { custom_source: KLAVIYO.source, profile: { data: { type: "profile", attributes: { email } } } },
-            relationships: { list: { data: { type: "list", id: KLAVIYO.list } } }
-          } })
-        });
-      } catch (err) { res = null; }
-      if (res && res.ok) {
+      const result = SIGNUP ? await SIGNUP.subscribe(email, "Fangviper blog") : "offline";
+      if (result === "ok") {
         f.classList.add("ok");
         input.disabled = true;
         label.textContent = "You're in";
-        msg.textContent = "Welcome to the pack. If an email asks you to confirm, tap the link inside.";
+        msg.textContent = "Welcome to the pack. New posts come by email, and pop-up ads are now off for you.";
         return;
       }
-      if (res && res.status === 400) { btn.disabled = false; label.textContent = "Join"; invalid(); return; }
+      if (result === "invalid") { btn.disabled = false; label.textContent = "Join"; invalid(); return; }
       // Klaviyo unreachable or down: hand the same email to the store's Shopify newsletter
       msg.textContent = "Taking you to the store to finish signing up.";
       f.target = "_self";
@@ -825,7 +814,7 @@
     // ads inside the article
     if (ADS) {
       const ad = ADS.inlineAd(p.adMatch);
-      if (h2s[2]) body.insertBefore(ad, h2s[2]); else body.appendChild(ad);
+      if (ad) { if (h2s[2]) body.insertBefore(ad, h2s[2]); else body.appendChild(ad); }
       ADS.railAd($("[data-rail-ad]"));
     }
 
@@ -878,7 +867,7 @@
     let lastScroll = Date.now(), nudges = 0, nudgeAt = 0;
     const hideNudge = () => { if (nudgeAt && Date.now() - nudgeAt > 1200) { nudge.classList.remove("show"); nudgeAt = 0; } };
     timers.push(setInterval(() => {
-      if (nudgeAt || nudges >= 2 || Date.now() - lastScroll < 7000 || prog < 0.1 || prog > 0.8 || $(".ad-modal") || root.classList.contains("menu-open")) return;
+      if (nudgeAt || nudges >= 2 || Date.now() - lastScroll < 7000 || prog < 0.1 || prog > 0.8 || $(".fv-invite") || root.classList.contains("menu-open")) return;
       const mins = Math.max(1, Math.ceil(p.minutes * (1 - prog)));
       nudge.innerHTML = `${ICON.down} ${mins} min left — the best part is next`;
       nudge.classList.add("show");
