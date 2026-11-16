@@ -1,8 +1,8 @@
 # Drevaunt Journal
 
-Black-and-white discipline and motivation blog for the Drevaunt brand, for the gym, the business and every goal. Ads on the site promote the store at [fangviper.com](https://fangviper.com).
+Black-and-white discipline and motivation blog for the Drevaunt brand, for the gym, the business and every goal. Ads on the site promote the store at [drevaunt.com](https://drevaunt.com).
 
-Live site: https://blog.fangviper.com/
+Live site: https://blog.drevaunt.com/
 
 ## Editing
 
@@ -14,4 +14,4 @@ Live site: https://blog.fangviper.com/
   powershell -ExecutionPolicy Bypass -File tools\build-pages.ps1
   ```
 
-  The site address used in search tags lives in `tools/site-url.txt` (currently https://blog.fangviper.com).
+  The site address used in search tags lives in `tools/site-url.txt` (currently https://blog.drevaunt.com).

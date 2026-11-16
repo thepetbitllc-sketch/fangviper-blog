@@ -229,7 +229,7 @@
   // ---------- global UI ----------
   function initNav() {
     const top = $("[data-top]");
-    $$("[data-store]").forEach(a => { a.href = ADS ? ADS.storeUrl(a.dataset.medium || "blog_link", a.dataset.q) : "https://fangviper.com"; });
+    $$("[data-store]").forEach(a => { a.href = ADS ? ADS.storeUrl(a.dataset.medium || "blog_link", a.dataset.q) : "https://drevaunt.com"; });
     // category links appear once that category has a post
     $$("[data-cat-link]").forEach(a => {
       const c = a.dataset.catLink;
@@ -631,7 +631,7 @@
       e.preventDefault();
       const email = input.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { invalid(); return; }
-      if (HASH_MODE) { msg.textContent = "Sign-up works on blog.fangviper.com."; return; }
+      if (HASH_MODE) { msg.textContent = "Sign-up works on blog.drevaunt.com."; return; }
       f.classList.remove("error");
       btn.disabled = true;
       label.textContent = "Joining";

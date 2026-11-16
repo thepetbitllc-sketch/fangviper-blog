@@ -4,7 +4,7 @@
 #   sitemap.xml, robots.txt, .nojekyll
 #   and refreshes the home page's own meta tags in index.html.
 # Run after editing posts:   powershell -ExecutionPolicy Bypass -File tools\build-pages.ps1
-# Change the public address: ... -File tools\build-pages.ps1 -SiteUrl https://blog.fangviper.com
+# Change the public address: ... -File tools\build-pages.ps1 -SiteUrl https://blog.drevaunt.com
 # Keep this file plain ASCII: Windows PowerShell 5.1 misreads UTF-8 text in scripts.
 param([string]$SiteUrl)
 $ErrorActionPreference = "Stop"

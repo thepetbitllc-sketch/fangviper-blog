@@ -1,6 +1,6 @@
 /* ==========================================================
    DREVAUNT JOURNAL
-   Luxury-house look matching the fangviper.com draft theme: white page, warm ink #19110B,
+   Luxury-house look matching the drevaunt.com draft theme: white page, warm ink #19110B,
    cream #FAF4EB, tile grey #F6F5F3, Jost, centred spaced wordmark, pill buttons, hairlines.
    ========================================================== */
 :root {
@@ -260,7 +260,7 @@ html:not(.js) .line > span { transform: none; }
 .plus-one { position: fixed; z-index: 9600; pointer-events: none; font: 400 18px var(--display); }
 
 /* ==========================================================
-   ADS (all link to fangviper.com)
+   ADS (all link to drevaunt.com)
    ========================================================== */
 .ad-tag { font: 500 10px/1.4 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 .ad-x { position: absolute; top: 8px; right: 8px; z-index: 3; display: grid; place-items: center; width: 32px; height: 32px; color: var(--mute); transition: color .2s; }
@@ -627,7 +627,7 @@ body:has(.fv-invite.in) .nudge { opacity: 0; visibility: hidden; pointer-events:
 }
 
 /* ==========================================================
-   Luxury-house layer (matches the fangviper.com draft theme)
+   Luxury-house layer (matches the drevaunt.com draft theme)
    ========================================================== */
 body { letter-spacing: .01em; }
 .label { font-weight: 400; letter-spacing: .08em; color: var(--mute); }

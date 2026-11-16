@@ -131,7 +131,7 @@
       }
       btn.disabled = false; label.textContent = "Subscribe";
       if (result === "invalid") bad();
-      else if (result === "preview") msg.textContent = "Sign-up works on blog.fangviper.com.";
+      else if (result === "preview") msg.textContent = "Sign-up works on blog.drevaunt.com.";
       else msg.textContent = "Couldn't reach the sign-up right now. Try again in a minute.";
     });
   }

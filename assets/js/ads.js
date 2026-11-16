@@ -1,6 +1,6 @@
 /* ==========================================================
    DREVAUNT — self-promo ad engine
-   Every ad points to the store (fangviper.com), not this blog.
+   Every ad points to the store (drevaunt.com), not this blog.
    Products come from assets/js/products.js (refresh it with
    `node --use-system-ca tools/sync-products.js`).
    Ads sit inside the page (story grid, articles, sidebar) plus a
@@ -8,7 +8,7 @@
    subscribers (signup.js) don't get the corner card at all.
    ========================================================== */
 (function () {
-  const STORE = "https://fangviper.com";
+  const STORE = "https://drevaunt.com";
 
   // id = the store handle; posts' `adMatch` in data.js names one
   const PRODUCTS = (window.FV_PRODUCTS || []).filter(p => p.img);
