@@ -1,5 +1,5 @@
 /* ==========================================================
-   FANG VIPER - newsletter sign-up (Klaviyo) + the "no pop-ups" perk
+   DREVAUNT - newsletter sign-up (Klaviyo) + the "no pop-ups" perk
    Sign-ups go straight into Klaviyo through its public browser API
    (site ID only, no secret key):
      Blog Newsletter (XkRtWc) - send new-post emails to this list
@@ -82,12 +82,12 @@
     el.setAttribute("aria-label", "Get new posts by email");
     el.innerHTML = `
       <button class="fv-invite__x" type="button" aria-label="Close">${CLOSE}</button>
-      <span class="label">The Fang Viper Journal</span>
+      <span class="label">The Drevaunt Journal</span>
       <h3 class="fv-invite__title">Read the next one first.</h3>
       <ul class="fv-invite__perks">
         <li>Every new post, straight to your inbox</li>
         <li>No more pop-up ads while you read</li>
-        <li>First look at new FangViper drops</li>
+        <li>First look at new Drevaunt drops</li>
       </ul>
       <form class="fv-invite__form" novalidate>
         <label class="field">
@@ -122,7 +122,7 @@
       };
       if (!validEmail(email)) { bad(); return; }
       btn.disabled = true; label.textContent = "Joining";
-      const result = await subscribe(email, "Fangviper blog pop-up");
+      const result = await subscribe(email, "Drevaunt blog pop-up");
       if (result === "ok") {
         form.classList.add("ok"); input.disabled = true; label.textContent = "You're in";
         msg.textContent = "Welcome. Pop-up ads are now off on this device.";

@@ -28,9 +28,9 @@ function Set-Region([string]$text, [string]$name, [string]$content) {
 
 if ($SiteUrl) { Write-Text $cfg $SiteUrl } else { $SiteUrl = (Read-Text $cfg).Trim() }
 $SiteUrl = $SiteUrl.TrimEnd('/')
-$brand = "Fang Viper Journal"
+$brand = "Drevaunt Journal"
 $dash = [string][char]0x2014   # em dash, written by code so the script stays plain ASCII
-$homeDesc = "The Fang Viper Journal: discipline, mindset, money and training for people who keep going when motivation runs out."
+$homeDesc = "The Drevaunt Journal: discipline, mindset, money and training for people who keep going when motivation runs out."
 $reserved = @("assets", "tools", "dist", "articles", "index.html")
 
 # ---- read posts from data.js ------------------------------------------------
@@ -153,7 +153,7 @@ foreach ($p in $posts) {
   $ld = '{"@context":"https://schema.org","@type":"BlogPosting","headline":"' + (JsonEsc $p.title) + '","description":"' + (JsonEsc $p.excerpt) +
         '","datePublished":"' + $p.date + '","dateModified":"' + $p.date + '","image":"' + $img + '","mainEntityOfPage":"' + $url +
         '","keywords":"' + (JsonEsc ($p.keywords -join ', ')) +
-        '","author":{"@type":"Organization","name":"Fang Viper"},"publisher":{"@type":"Organization","name":"Fang Viper","logo":{"@type":"ImageObject","url":"' + $SiteUrl + '/assets/img/logo-black.png"}}}'
+        '","author":{"@type":"Organization","name":"Drevaunt"},"publisher":{"@type":"Organization","name":"Drevaunt","logo":{"@type":"ImageObject","url":"' + $SiteUrl + '/assets/img/logo-black.png"}}}'
   $ldTags = "<script type=""application/ld+json"">$ld</script>"
 
   # FAQ answers written as <details><summary>Q</summary><p>A</p></details> in the body
@@ -193,7 +193,7 @@ $tags
   <main id="main" class="article-view" data-article data-slug="$($p.slug)">
     <header class="a-hero container">
       <a class="a-back" href="index.html#journal">Back to the journal</a>
-      <div class="a-kicker"><b>$(Esc $p.cat)</b><span>$dateText</span><span>By Fang Viper</span></div>
+      <div class="a-kicker"><b>$(Esc $p.cat)</b><span>$dateText</span><span>By Drevaunt</span></div>
       <h1 class="a-title">$(Esc $p.title)</h1>
       <p class="a-dek">$(Esc $p.excerpt)</p>
       <div class="a-cover"><img src="$($p.image)" alt="$(Esc $p.alt)"></div>

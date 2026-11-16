@@ -1,5 +1,5 @@
 /* ==========================================================
-   FANG VIPER — interactions & animations
+   DREVAUNT — interactions & animations
    ========================================================== */
 (() => {
   "use strict";
@@ -636,7 +636,7 @@
       btn.disabled = true;
       label.textContent = "Joining";
       msg.textContent = "";
-      const result = SIGNUP ? await SIGNUP.subscribe(email, "Fangviper blog") : "offline";
+      const result = SIGNUP ? await SIGNUP.subscribe(email, "Drevaunt blog") : "offline";
       if (result === "ok") {
         f.classList.add("ok");
         input.disabled = true;
@@ -684,13 +684,13 @@
     const more = POSTS.filter(x => x !== p && x !== next)
       .sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 3);
     const myFangs = LS.get("fv_fangs", {})[p.slug] || 0;
-    document.title = p.seoTitle || `${p.title} — Fang Viper Journal`;
+    document.title = p.seoTitle || `${p.title} — Drevaunt Journal`;
     LS.set("fv_lastpost", p.slug);
 
     main.innerHTML = `
       <header class="a-hero container">
         <a class="a-back" href="${homeHref("journal")}">${ICON.left} Back to the journal</a>
-        <div class="a-kicker"><b>${p.category}</b><span>${fmtDate(p.date)}</span><span>${p.minutes} min read</span><span>By Fang Viper</span></div>
+        <div class="a-kicker"><b>${p.category}</b><span>${fmtDate(p.date)}</span><span>${p.minutes} min read</span><span>By Drevaunt</span></div>
         <h1 class="a-title" data-split>${p.title}</h1>
         <p class="a-dek" data-reveal style="--d:.3s">${p.excerpt}</p>
         <div class="a-cover" data-reveal="clip">${coverArt(p)}</div>
@@ -820,7 +820,7 @@
 
     // share (hidden when the page runs inside an embedded preview)
     const shareX = $("[data-share-x]"), copyBtn = $("[data-copy]");
-    if (shareX) shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(p.title + " — Fang Viper")}&url=${encodeURIComponent(location.href)}`;
+    if (shareX) shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(p.title + " — Drevaunt")}&url=${encodeURIComponent(location.href)}`;
     if (copyBtn) on(copyBtn, "click", () => {
       const tip = t => { copyBtn.dataset.tip = t; copyBtn.classList.add("tip"); setTimeout(() => copyBtn.classList.remove("tip"), 1600); };
       if (!navigator.clipboard) { tip("Copy failed"); return; }
@@ -945,7 +945,7 @@
     home.hidden = false;
     const wasArticle = currentView === "article";
     currentView = "home";
-    document.title = "Fang Viper Journal";
+    document.title = "Drevaunt Journal";
     if (wasArticle) { if (journal) journal.refresh(); initResume(); }
     const target = hash && document.getElementById(hash);
     if (target) setTimeout(() => target.scrollIntoView(), first ? 80 : 0);

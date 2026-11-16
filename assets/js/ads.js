@@ -1,5 +1,5 @@
 /* ==========================================================
-   FANG VIPER — self-promo ad engine
+   DREVAUNT — self-promo ad engine
    Every ad points to the store (fangviper.com), not this blog.
    Products come from assets/js/products.js (refresh it with
    `node --use-system-ca tools/sync-products.js`).
@@ -82,7 +82,7 @@
     toastCount++; lastPop = Date.now();
     const el = document.createElement("aside");
     el.className = "ad-toast";
-    el.setAttribute("aria-label", "FangViper store promotion");
+    el.setAttribute("aria-label", "Drevaunt store promotion");
     el.innerHTML = `
       <button class="ad-x" aria-label="Close ad">${CLOSE}</button>
       <a class="ad-toast__link" href="${link(p, placement || "toast")}" target="_blank" rel="noopener">
@@ -119,10 +119,10 @@
     el.innerHTML = `
       <div class="card__cover card__cover--ad">
         ${ps.map((p, i) => `<img class="${i === 0 ? "on" : ""}" src="${img(p, 600)}" alt="${p.name}" loading="lazy">`).join("")}
-        <span class="card__sponsor">Sponsored · FangViper Store</span>
+        <span class="card__sponsor">Sponsored · Drevaunt Store</span>
       </div>
       <div class="card__body">
-        <div class="card__meta"><span class="card__cat">Gear</span><span>FangViper.com</span></div>
+        <div class="card__meta"><span class="card__cat">Gear</span><span>Drevaunt</span></div>
         <h3 class="card__title"><span>Train in the words you live by.</span></h3>
         <p class="card__excerpt">${ps.map(p => p.name).join(" · ")}</p>
         <span class="card__more">Shop the drop ${ARROW}</span>
@@ -146,7 +146,7 @@
       <a href="${link(p, "article_inline")}" target="_blank" rel="noopener">
         <div class="ad-inline__img"><img src="${img(p, 500)}" alt="${p.name}" loading="lazy"></div>
         <div class="ad-inline__body">
-          <span class="ad-tag">Sponsored · FangViper Store</span>
+          <span class="ad-tag">Sponsored · Drevaunt Store</span>
           <strong>${p.name}</strong>
           <p>${p.kicker}. Made for the ones who read this far.</p>
           <span class="btn btn--light btn--sm">Get yours · ${p.price} ${ARROW}</span>

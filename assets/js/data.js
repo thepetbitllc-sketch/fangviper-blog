@@ -1,5 +1,5 @@
 /* ==========================================================
-   FANG VIPER — blog content
+   DREVAUNT — blog content
    Add a post: copy the object below, give it a unique slug, fill the fields, then run
    tools\build-pages.ps1 so it gets its own page at /<slug>/.
      title       the on-page H1 (use once)
@@ -119,7 +119,7 @@ window.FV_POSTS = [
 <p>You'll never feel motivated every day, and nobody does. The people who finish houses, build businesses, set personal records, and change their lives aren't more motivated than you. They just stopped relying on motivation.</p>
 <blockquote>Start when you feel it. Keep going when you don't.</blockquote>
 <p class="see-also">Feel like quitting right now? Read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a>. Building a business from nothing? Read <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>. Great at starting but struggle to finish? Read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
-<p class="cta-line">Want a daily reminder? <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, with t-shirts, cups, and bags made for people who keep going when the motivation runs out.</p>
+<p class="cta-line">Want a daily reminder? <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the Drevaunt collection</a>, with t-shirts, cups, and bags made for people who keep going when the motivation runs out.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -226,7 +226,7 @@ window.FV_POSTS = [
 <blockquote>You can't see how close you are from where you're standing. That's exactly why you keep going.</blockquote>
 <p>If you're reading this in the middle of that quiet, tired moment, <mark>don't make a permanent decision tonight.</mark> Sleep, get up, and do one small thing tomorrow. Then do it again.</p>
 <p class="see-also">If motivation is fading, start with the foundation. Read <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation: Why Motivation Fades and What Actually Keeps You Going</a>. Building a business with no money? Read <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>. Losing steam halfway? Read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>. Training hard but not seeing results? Read <a class="text-cta" data-post="how-to-stay-motivated-to-run" href="how-to-stay-motivated-to-run/">How to Stay Motivated to Run When Results Are Slow</a>.</p>
-<p class="cta-line">And for a daily reminder of why you started, <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">explore the FangViper collection</a>, made for people who keep going when no one is watching.</p>
+<p class="cta-line">And for a daily reminder of why you started, <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">explore the Drevaunt collection</a>, made for people who keep going when no one is watching.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -334,7 +334,7 @@ window.FV_POSTS = [
 </div>
 <p>If the answer to either is yes, keep going and adjust as you learn. If both answers are no for a long time, change the product or the approach, but don't throw away everything you've learned. <mark>That knowledge is the foundation of whatever you build next.</mark></p>
 <p class="see-also">Struggling with the mental side of it? Read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a> and <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation: Why Motivation Fades and What Actually Keeps You Going</a>. And when the middle gets long, read <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
-<p class="cta-line">Building from nothing? Keep your reminder close. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who build without waiting for permission.</p>
+<p class="cta-line">Building from nothing? Keep your reminder close. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the Drevaunt collection</a>, made for people who build without waiting for permission.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -461,7 +461,7 @@ window.FV_POSTS = [
 <blockquote>The people who finish aren't the ones who never felt like quitting. They're the ones who kept taking the next step anyway.</blockquote>
 <p><mark>Finish this one. Then go start the next.</mark></p>
 <p class="see-also">Keep going with the rest of the series: <a class="text-cta" data-post="discipline-vs-motivation" href="discipline-vs-motivation/">Discipline vs Motivation</a>, <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a>, and <a class="text-cta" data-post="how-to-stay-motivated-building-a-business" href="how-to-stay-motivated-building-a-business/">How to Stay Motivated Building a Business With No Money</a>.</p>
-<p class="cta-line">For the long middle of your journey, keep a reminder close. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who finish what they start.</p>
+<p class="cta-line">For the long middle of your journey, keep a reminder close. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the Drevaunt collection</a>, made for people who finish what they start.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
@@ -570,7 +570,7 @@ window.FV_POSTS = [
 <p>When people watch a race, they see the finish, the medal, the fast time. They don't see the thousands of ordinary runs behind it, the early mornings, the plateaus, the attempts that fell short.</p>
 <blockquote>Your slow weeks are part of the story. Keep heating the water. It boils eventually.</blockquote>
 <p class="see-also">If you're struggling to keep going, read <a class="text-cta" data-post="how-to-stay-motivated-when-you-feel-like-giving-up" href="how-to-stay-motivated-when-you-feel-like-giving-up/">How to Stay Motivated When You Feel Like Giving Up</a> and <a class="text-cta" data-post="how-to-finish-what-you-start" href="how-to-finish-what-you-start/">How to Finish What You Start</a>.</p>
-<p class="cta-line">Carry the reminder on every run and every session. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the FangViper collection</a>, made for people who keep showing up.</p>
+<p class="cta-line">Carry the reminder on every run and every session. <a class="text-cta" href="https://fangviper.com/collections?utm_source=fangviper_blog&amp;utm_medium=article_cta&amp;utm_campaign=blog_ads" target="_blank" rel="noopener">Explore the Drevaunt collection</a>, made for people who keep showing up.</p>
 
 <h2>Frequently Asked Questions</h2>
 <div class="faq">

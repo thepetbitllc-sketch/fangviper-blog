@@ -1,6 +1,6 @@
-# Fang Viper Journal
+# Drevaunt Journal
 
-Black-and-white discipline and motivation blog for the Fang Viper brand, for the gym, the business and every goal. Ads on the site promote the store at [fangviper.com](https://fangviper.com).
+Black-and-white discipline and motivation blog for the Drevaunt brand, for the gym, the business and every goal. Ads on the site promote the store at [fangviper.com](https://fangviper.com).
 
 Live site: https://blog.fangviper.com/
 
